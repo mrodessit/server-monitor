@@ -1,0 +1,34 @@
+<% include ./partials/header %>
+
+ <div class="row-fluid">
+    <div class="span6">
+        <div class="widget-box">
+            <div class="widget-title"> <span class="icon"> <i class="icon-align-justify"></i> </span>
+                <h5>Tag-info</h5>
+            </div>
+            <div class="widget-content nopadding">
+                <%- msg %>
+                <form action="" method="post" class="form-horizontal">
+                    <div class="control-group">
+                        <label class="control-label">Tag name :</label>
+                        <div class="controls">
+                            <input type="hidden" name="action" value="add" />
+                            <input type="text" name="tagname" class="span11" placeholder="First name" />
+                        </div>
+                    </div>
+                    <div class="control-group">
+                    <label class="control-label">Color (hex) :</label>
+                        <div class="controls">
+                            <input type="text" name="color" data-color="#ffffff" value="#ffffff" class="colorpicker input-big span11">
+                            <span class="help-block">Color picker with Formate of  (hex)</span> </div>
+                    </div>
+                    <div class="form-actions">
+                    <button type="submit" class="btn btn-success pull-right">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<% include ./partials/footer %>

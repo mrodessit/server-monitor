@@ -18,3 +18,23 @@ exports.isEmpty = function (obj)
 
     return true;
 }
+
+exports.isEmptyGetParams = function(obj, arr)
+{    
+    var result = false;
+
+    if (exports.isEmpty(obj)) {
+        result = true;
+    }
+    else {
+        for (var i=0; i<arr.length; i++)
+        {
+            if (exports.isEmpty(obj[arr[i]])) {
+                result = true;
+                break;
+            }
+        }
+    } 
+
+    return result;    
+}

@@ -12,6 +12,9 @@ module.exports = function(app, passport) {
     // users controller
     app.use('/', isAuth, require('../controllers/users'));
 
+    // tags controller
+    app.use('/', isAuth, require('../controllers/tags'));
+
     // error page
     app.get('/error', isAuth, function(req, res) {
         var page = {

@@ -1,0 +1,39 @@
+<% include ./partials/header %>
+
+<div class="row-fluid">
+    <div class="span12">
+        <div class="widget-box">
+          <div class="widget-title"> <span class="icon"> <i class="icon-th"></i> </span>
+            <h5>Tag table</h5>
+          </div>
+          <div class="widget-content nopadding">
+            <table id="tag-table" class="table table-bordered data-table">
+              <thead>
+                <tr>
+                  <th>id</th>
+                  <th>tag name</th>
+                  <th>is system</th>
+                  <th>color</th>
+                  <th>set by</th>
+                  <th>actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% for(var i=0; i<tags.length; i++) { %>
+                <tr>
+                    <td><%- tags[i].id %></td>
+                    <td><span style="font-weight:700;color:#<%- tags[i].color %>;"><%- tags[i].tag %></span></td>
+                    <td><%- tags[i].is_system_span %></td>
+                    <td>#<%- tags[i].color %></td>
+                    <td><%- tags[i].username %></td>
+                    <td><% if(tags[i].is_system == 0) { %><a href="/tags-edit?action=delete&id=<%- tags[i].id %>" class="btn btn-danger btn-mini">Delete</a><% } %></td>
+                </tr>
+                <% } %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+    </div>
+</div>
+
+<% include ./partials/footer %>

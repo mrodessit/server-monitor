@@ -2,6 +2,7 @@ var express         = require('express');
 var router          = express.Router();
 var modelUsers      = require('../models/users');
 var notification    = require('../helpers/notification');
+var misc_mw         = require('../middlewares/misc'); // overall middleware functions
 var mw              = require('../middlewares/users'); // middleware functions for this controller
 
 router.get('/users-show', mw.getUserAll, function(req, res) {
@@ -17,14 +18,14 @@ router.get('/users-show', mw.getUserAll, function(req, res) {
     res.render('users-show.ejs', page);
 });
 
-router.get('/users-add', mw.lookGet, function(req, res) {
+router.get('/users-add', misc_mw.lookGet, function(req, res) {
 
     var msg = notification.show(req.notification);
 
     var page = {
         css : "",
-        breadcrump : "show all users",
-        h1 : "Show all users",
+        breadcrump : "Add user",
+        h1 : "Add user",
         msg : msg,
         js : "",
         script : ""
@@ -41,8 +42,8 @@ router.get('/users-edit', mw.editTodo, mw.editAction, function(req, res) {
     if (req.query.action == "delete") {
         var page = {
             css : "",
-            breadcrump : "show all users",
-            h1 : "Show all users",
+            breadcrump : "delete user",
+            h1 : "Delete user",
             text : "Delete user id: "+req.query.id,
             id : req.query.id,
             js : "",

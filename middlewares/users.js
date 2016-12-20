@@ -57,31 +57,6 @@ var addUser = function(req, res, next) {
     }        
 }
 
-var lookGet = function(req, res, next) {
-    
-    var notification = { type : "", text : ""};
-
-    if (req.query.status) {        
-        if (req.query.status == 'success') {
-            
-            notification = {
-                type : "success",
-                text : "User succesfully added!"
-            };
-        } else if (req.query.status == 'error') {
-            
-            notification = {
-                type : "error",
-                text : req.query.error
-            };
-        }
-    }
-
-    req.notification = notification;
-
-    next();
-}
-
 var editTodo = function(req, res, next) {
 
     if (!validator.isEmpty(req.query.id))
@@ -101,7 +76,7 @@ var editTodo = function(req, res, next) {
         }
     } 
     else {
-        next();
+        res.redirect('/error?error=no_id');
     }
 }
 
@@ -117,6 +92,5 @@ var editAction = function(req, res, next) {
 
 exports.editAction = editAction;
 exports.editTodo = editTodo;
-exports.lookGet = lookGet;
 exports.addUser = addUser;
 exports.getUserAll = getUserAll;
