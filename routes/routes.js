@@ -18,6 +18,9 @@ module.exports = function(app, passport) {
     // logs controller
     app.use('/', isAuth, require('../controllers/logs'));
 
+    // servers controller
+    app.use('/', isAuth, require('../controllers/servers'));
+
     // error page
     app.get('/error', isAuth, function(req, res) {
         var page = {

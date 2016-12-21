@@ -1,0 +1,55 @@
+<% include ./partials/header %>
+<div class="row-fluid">
+    <div class="span12">
+        <div class="widget-box">
+          <div class="widget-title"> <span class="icon"> <i class="icon-list"></i> </span>
+            <h5>Extended Tag Search:</h5>
+          </div>
+          <div class="widget-content">
+          <input type="text" id="custom-search" name="custom-search" style="width:95%;"/>
+          </div>
+        </div>
+    </div>
+</div>
+<div class="row-fluid">
+    <div class="span12">
+        <div class="widget-box">
+          <div class="widget-title"> <span class="icon"><input type="checkbox" id="title-checkbox" name="title-checkbox" /></span>
+            <h5>Servers table</h5>
+          </div>
+          <div class="widget-content nopadding">
+            <div style="padding:10px 10px 10px 10px;">
+            <button class="btn btn-warning" onClick="copyAllCheckedIp()">Copy IP</button>&nbsp;&nbsp;
+            <button class="btn btn-success" onClick="tagAllCheckedIp()">Edit Tags</button>&nbsp;&nbsp;
+            <button class="btn btn-primary" onClick="statusAllCheckedIp()">Pause/Run</button>&nbsp;&nbsp;
+            <button class="btn btn-danger" onClick="deleteAllCheckedIp()">Delete Servers</button>&nbsp;
+            </div>    
+            <table id="tag-table" class="table table-bordered data-table">
+              <thead>
+                <tr>
+                  <th><span class="icon"><input type="checkbox" id="title-checkbox" name="title-checkbox" /></span></th>
+                  <th>id</th>
+                  <th>ip</th>
+                  <th>state</th>
+                  <th>date create</th>
+                  <th>date update</th>
+                  <th>tags</th>
+                  <th>monitoring</th>
+                  <th>actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <%- tableData %>
+              </tbody>
+            </table>
+            <div style="padding:10px 10px 10px 10px;">
+            <button class="btn btn-warning" onClick="copyAllCheckedIp()">Copy IP</button>&nbsp;&nbsp;
+            <button class="btn btn-success" onClick="tagAllCheckedIp()">Edit Tags</button>&nbsp;&nbsp;
+            <button class="btn btn-primary" onClick="statusAllCheckedIp()">Pause/Run</button>&nbsp;&nbsp;
+            <button class="btn btn-danger" onClick="deleteAllCheckedIp()">Delete Servers</button>&nbsp;
+            </div>
+          </div>
+        </div>
+    </div>
+</div>
+<% include ./partials/footer %>

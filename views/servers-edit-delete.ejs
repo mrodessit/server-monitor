@@ -1,0 +1,32 @@
+<% include ./partials/header %>
+ <div class="row-fluid">
+    <div class="span6">
+        <div class="widget-box">
+            <div class="widget-title"> <span class="icon"> <i class="icon-align-justify"></i> </span>
+                <h5>Delete info?</h5>
+            </div>
+            <div class="widget-content">
+            <div><%- text %></div>    
+            </div>
+        </div>
+    </div>
+</div>    
+<div class="row-fluid">     
+    <div class="span6">
+        <div class="widget-box">
+            <div class="widget-title"> <span class="icon"> <i class="icon-align-justify"></i> </span>
+                <h5>Server-delete</h5>
+            </div>
+            <div class="widget-content nopadding">                
+                <form action="" method="get" class="form-horizontal">
+                    <%- data %>
+                    <div class="form-actions">
+                    <button type="button" onclick="javascript:history.back()" class="btn pull-left">Back</button>
+                    <button type="submit" class="btn btn-success pull-right">Delete</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<% include ./partials/footer %>

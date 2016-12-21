@@ -1,5 +1,4 @@
 var db          = require('../config/db');
-var validator   = require('../helpers/validator');
 
 function getDateRange(start, end)
 {

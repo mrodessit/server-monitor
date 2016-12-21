@@ -101,7 +101,7 @@ function tagAllCheckedIp()
 
     if (idArr.length > 0)
     {
-        window.location = "/server-edit?action=edit-tag&idArr=" + idArr.join(',');
+        window.location = "/servers-edit-tags?idArr=" + idArr.join(',');
     }
 }
 
@@ -113,7 +113,7 @@ function statusAllCheckedIp()
 
     if (idArr.length > 0)
     {
-        window.location = "/server-edit?todo=pause-run&idArr=" + idArr.join(',');
+        window.location = "/servers-edit?todo=pause-run&idArr=" + idArr.join(',');
     }
 }
 
@@ -125,7 +125,7 @@ function deleteAllCheckedIp()
 
     if (idArr.length > 0)
     {
-        window.location = "/server-edit?action=delete&idArr=" + idArr.join(',');
+        window.location = "/servers-edit?action=delete&idArr=" + idArr.join(',');
     }
 }
 

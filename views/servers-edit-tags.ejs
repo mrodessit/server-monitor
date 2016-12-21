@@ -1,0 +1,54 @@
+ <% include ./partials/header %>
+ <div class="row-fluid">
+    <div class="span6">
+        <div class="widget-box">
+            <div class="widget-title"> <span class="icon"> <i class="icon-align-justify"></i> </span>
+                <h5>Edit tags for servers</h5>
+            </div>
+            <div class="widget-content">
+            <div><%- text %></div>    
+            </div>
+        </div>    
+        <div class="widget-box">
+            <div class="widget-title"> <span class="icon"> <i class="icon-align-justify"></i> </span>
+                <h5>Server-tag-edit</h5>
+            </div>
+            <div class="widget-content">                
+                <form action="" method="post" >
+                    <%- data %>
+                     <div class="controls">                            
+                        <input type="text" name="tagnames" id="tag-list" class="span12 m-wrap" placeholder="tags" />
+                        <span class="help-block">Can be placed multiple tags. Use space as separator.</span>                        
+                    </div>                    
+                    <div class="control-group">
+                    <label class="control-label">Action :</label>
+                        <div class="controls">
+                            <label>
+                            <input type="radio" name="choice" value="add" checked/>
+                            Add tags</label>
+                            <label>
+                            <input type="radio" name="choice" value="delete" />
+                            Delete tags</label>
+                            <label>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                    <button type="button" onclick="javascript:history.back()" class="btn pull-left">Back</button>
+                    <button type="submit" class="btn btn-success pull-right">Apply</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="span6">
+        <div class="widget-box">
+            <div class="widget-title"> <span class="icon"> <i class="icon-align-justify"></i> </span>
+                <h5>Tag List</h5>
+            </div>
+            <div class="widget-content noppading">
+            <%- tagData %>    
+            </div>
+        </div>
+    </div>     
+</div>
+<% include ./partials/footer %>
