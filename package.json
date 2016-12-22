@@ -10,8 +10,10 @@
     "connect-pg-simple": "^3.1.2",
     "cookie-parser": "^1.4.3",
     "ejs": "^2.5.5",
+    "evilscan": "^1.0.3",
     "express": "^4.14.0",
     "express-session": "^1.14.2",
+    "net-ping": "^1.2.0",
     "passport": "^0.3.2",
     "passport-local": "^1.0.0",
     "pg-promise": "^5.5.0"
