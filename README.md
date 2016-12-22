@@ -1,7 +1,11 @@
 # server-monitor
+<<<<<<< Updated upstream
 
 ### Web UI
 MVC pattern based. Using NodeJS, Express JS, PostgreSQL. Template engine - EJS.
+=======
+Back-end. MVC pattern based. Using NodeJS, Express JS, PostgreSQL. Template engine - EJS.
+>>>>>>> Stashed changes
 
 Entrypoint : server.js
 
