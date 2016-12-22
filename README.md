@@ -1,11 +1,7 @@
 # server-monitor
-<<<<<<< Updated upstream
 
 ### Web UI
 MVC pattern based. Using NodeJS, Express JS, PostgreSQL. Template engine - EJS.
-=======
-Back-end. MVC pattern based. Using NodeJS, Express JS, PostgreSQL. Template engine - EJS.
->>>>>>> Stashed changes
 
 Entrypoint : server.js
 
@@ -13,6 +9,30 @@ Entrypoint : server.js
 Module that checks server state and update information about it at DB.
 
 Entrypoint: watcher.js
+
+### Intallation
+
+Install node modules
+
+```bash
+npm install
+```
+
+Create PostgreSQL User and Database
+
+```bash
+CREATE DATABASE smonitor;
+
+CREATE USER test_user WITH password 'qwerty';
+
+GRANT ALL privileges ON DATABASE smonitor TO test_user;
+```
+
+Create tables 
+
+```bash
+node ./setup/db.js
+```
 
 ## File list Web UI
 
