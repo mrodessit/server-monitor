@@ -1,0 +1,124 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer.html">
+
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-checkbox/paper-checkbox.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/iron-form/iron-form.html">
+<link rel="import" href="../elements/block-notify.html">
+
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="sm-user-add">
+  <template>
+    <style include="shared-styles">
+    
+      :host {
+        display: block;
+
+        padding: 10px;
+      }
+
+      .item {        
+        max-width:640px;        
+      }
+
+      .item::after {
+        content: '';
+        display: block;
+        clear: both;
+      }
+
+      .msg {
+          display: none;
+      }
+
+    </style>
+
+    <div class="item" >         
+        <h1>Add User</h1>            
+    </div>
+
+    <div class="item">
+      <div class="card">        
+        <form is="iron-form" method="" action="/" id="formAddUser">
+            <block-notify id="notifyFormAddUser"></block-notify>
+            <iron-ajax id="ajaxFormAddUser" url="/api/user/add" on-response="handleResponse"></iron-ajax>
+            <paper-input name="name" id="form-name" label="Name" required auto-validate></paper-input>
+            <paper-input name="password" id="form-pass" label="Password" type="password" required auto-validate></paper-input>
+            <br>
+            <paper-checkbox name="isAdmin">Is Admin?</paper-checkbox>
+            <br><br>
+            <paper-button raised onclick="_delayedSubmit(event)" disabled id="eventSubmit">
+                <paper-spinner id="spinner" hidden></paper-spinner>Submit</paper-button>
+            <paper-button raised onclick="_reset(event)">Reset</paper-button>                    
+        </form>
+      </div>
+    </div>
+
+  </template>
+
+  <script>              
+    Polymer({
+        is: 'sm-user-add',
+
+        handleResponse: function(data) {
+            
+            var blockNotify = this.querySelector('block-notify');            
+
+            if (data.detail.response.result) {
+                blockNotify.notifyShow("success", data.detail.response.msg);
+            }        
+            else {
+                blockNotify.notifyShow("error", data.detail.response.msg);                
+            }
+
+            document.getElementById('formAddUser').reset();        
+        }
+     });
+
+    document.getElementById('formAddUser').addEventListener('change', function(event) {    
+        eventSubmit.disabled = !formAddUser.validate();
+    });
+
+    function _delayedSubmit(event) {
+        
+        var isAdmin = document.querySelector('paper-checkbox').checked;
+        ajaxFormAddUser.method = 'post';
+        ajaxFormAddUser.contentType = 'application/json'; 
+
+        var userInfo = {
+            username : document.getElementById('form-name').value,
+            password : document.getElementById('form-pass').value,
+            isadmin : (isAdmin) ? 1 : 0
+        };
+
+        ajaxFormAddUser.body = JSON.stringify(userInfo);
+        ajaxFormAddUser.generateRequest();      
+    }
+
+    function _reset(event) {
+        var form = Polymer.dom(event).localTarget.parentElement
+        form.reset();
+        eventSubmit.disabled = true;
+        notifyFormAddUser.notifyHide();
+    }
+
+    document.getElementById('formAddUser').addEventListener('iron-form-submit', function(event) {
+        spinner.active = false;
+        spinner.hidden = true;
+        eventSubmit.disabled = false;        
+    });
+
+  </script>
+</dom-module>

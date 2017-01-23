@@ -1,5 +1,7 @@
 # server-monitor
 
+outdated
+
 ### Web UI
 MVC pattern based. Using NodeJS, Express JS, PostgreSQL. Template engine - EJS.
 

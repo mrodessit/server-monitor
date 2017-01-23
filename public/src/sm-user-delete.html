@@ -1,0 +1,158 @@
+
+<link rel="import" href="../bower_components/polymer/polymer.html">
+
+<link rel="import" href="../bower_components/app-route/app-location.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../elements/block-notify.html">
+
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="sm-user-delete">
+  <template>
+    <style include="shared-styles">
+    
+      :host {
+        display: block;
+
+        padding: 10px;
+      }
+
+      .item {        
+        max-width:640px;        
+      }
+
+      .item::after {
+        content: '';
+        display: block;
+        clear: both;
+      }
+
+      .msg {
+          display: none;
+      }
+
+      a {
+          text-decoration: none;
+      }
+
+    </style>
+
+    <app-location route="{{route}}" query-params="{{queryParams}}"></app-location>
+
+    <div class="item" >         
+        <h1>Delete User</h1>            
+    </div>
+
+    <div class="item">
+      <div class="card">        
+        <iron-ajax 
+            id="ajaxGetUserById"
+            url="{{urlGetIdInfo}}" 
+            method="GET"
+            content-type="application/json"
+            handle-as = "json" 
+            on-response="handleResponseGetUserInfo">
+        </iron-ajax>
+        <iron-ajax 
+            id="ajaxDeleteUserById" 
+            url="/api/user/delete" 
+            method="POST"
+            content-type="application/json"
+            handle-as = "json" 
+            on-response="handleResponseDeleteUser">
+        </iron-ajax>
+
+        <block-notify id="notifyUserDelete"></block-notify>
+        <h3>Delete User?</h3>                
+        <div id="userInfo"></div>
+        <br>
+        <a href="/user-list">
+            <paper-button raised >BACK</paper-button>
+        </a>
+        <paper-button raised disabled class="custom red" id="buttonFormUserDelete" on-click="_deleteUserById">Delete</paper-button>
+      </div>
+    </div>
+
+  </template>
+
+  <script>              
+    Polymer({
+        is: 'sm-user-delete',
+
+        properties: {
+            route: {
+                type: Object
+            },
+
+            queryParams: {
+                type: Object,
+                observer: '_queryParamsChanged'
+            },
+
+            active: {
+                type: Boolean,
+                value: false,
+                observer: '_activeChanged'
+            },
+
+            urlGetIdInfo: {
+                type: String,
+                computed: '_getRequestIdURL(queryParams)'
+            },
+
+        },
+
+        _getRequestIdURL: function(queryParams) {                        
+            return '/api/user/get/id/'+queryParams.id;
+        },
+
+        _queryParamsChanged: function(query) {
+            if(query != 'undefined' && this.active) {
+                ajaxGetUserById.generateRequest();
+            }
+        }, 
+
+        _activeChanged: function(active) {
+            if (!active) {
+                notifyUserDelete.notifyHide();
+            }
+        },          
+
+        _deleteUserById: function() {
+            buttonFormUserDelete.disabled = true;
+
+            var userInfo = {
+                id: this.queryParams.id
+            };
+
+            ajaxDeleteUserById.body = JSON.stringify(userInfo);
+            ajaxDeleteUserById.generateRequest();    
+        },
+
+        handleResponseGetUserInfo: function(data) {                       
+
+            if (!data.detail.response.result) {
+                notifyUserDelete.notifyShow("error", data.detail.response.msg);                
+            }
+            else {
+                userInfo.innerHTML = 
+                    "Id: "+data.detail.response.data.id+"<br>"+
+                    "Username: "+data.detail.response.data.username;  
+                buttonFormUserDelete.disabled = false;
+            }
+        },    
+
+        handleResponseDeleteUser: function(data) {
+            if (!data.detail.response.result) {
+                notifyUserDelete.notifyShow("error", data.detail.response.msg);                
+            }
+            else {
+                notifyUserDelete.notifyShow("success", data.detail.response.msg);
+            }
+        } 
+
+     });
+
+  </script>
+</dom-module>

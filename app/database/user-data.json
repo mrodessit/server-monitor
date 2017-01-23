@@ -1,0 +1,14 @@
+{
+  "1b9edcd3-55f1-4870-809b-73f84334200f": {
+    "username": "admin",
+    "password": "$2a$10$I82rcM8478BRnq40xHfrTOrArT7dsKVIR3Qjh93Gs/KGkxyAZrcZy",
+    "isadmin": 1,
+    "id": "1b9edcd3-55f1-4870-809b-73f84334200f"
+  },
+  "1218ea7e-eeeb-4713-85e2-6f1ed4fc9d0a": {
+    "username": "test",
+    "password": "$2a$10$GBmxOyKY./5dukAY9RklceRkEP0YnVJRKp4OHOoFoiEQnI9bFspPK",
+    "isadmin": 1,
+    "id": "1218ea7e-eeeb-4713-85e2-6f1ed4fc9d0a"
+  }
+}

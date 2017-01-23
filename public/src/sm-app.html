@@ -1,0 +1,240 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/app-layout/app-drawer/app-drawer.html">
+<link rel="import" href="../bower_components/app-layout/app-drawer-layout/app-drawer-layout.html">
+<link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
+<link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
+<link rel="import" href="../bower_components/app-layout/app-scroll-effects/app-scroll-effects.html">
+<link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
+<link rel="import" href="../bower_components/app-route/app-location.html">
+<link rel="import" href="../bower_components/app-route/app-route.html">
+<link rel="import" href="../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../bower_components/iron-selector/iron-selector.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/paper-menu/paper-menu.html">
+<link rel="import" href="../bower_components/paper-menu/paper-submenu.html">
+<link rel="import" href="../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../bower_components/iron-icons/device-icons.html">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="sm-icons.html">
+
+<dom-module id="sm-app">
+  <template>
+    <style>
+      :host {
+        --app-primary-color: #4285f4;
+        --app-secondary-color: black;        
+
+        display: block;
+      }   
+
+      app-header {
+        color: #fff;
+        background-color: var(--app-primary-color);
+      }
+      app-header paper-icon-button {
+        --paper-icon-button-ink-color: white;
+      }
+
+      .drawer-list {
+        margin: 0 20px;
+      }      
+
+      paper-item {
+        border-bottom: 1px solid #DCDFE0;
+      }
+
+      .nav-menu iron-icon {
+        padding-right: 10px;
+      }
+
+      .nav-menu a {
+        text-decoration: none;
+        color: #424242;
+      }
+
+      .nav-menu paper-item:hover {
+        background-color: #D9E9FA;
+      }
+      
+      paper-item {
+        --paper-item-selected: {
+          background: #D9EBFA;
+          font-weight: bold;
+        };
+        --paper-item-focused: {
+          background: #D9EBFA;
+          font-weight: bold;
+        };
+        --paper-item-focused-before: {
+          opacity: 0;
+        };
+      }
+
+    </style>
+
+    <app-location route="{{route}}"></app-location>
+    <app-route
+        route="{{route}}"
+        pattern="/:page"
+        data="{{routeData}}"
+        tail="{{subroute}}"></app-route>
+
+    <app-drawer-layout fullbleed>
+      <!-- Drawer content -->
+      <app-drawer id="drawer">
+        <app-toolbar>Server Monitor</app-toolbar>        
+
+        <paper-menu selected="[[page]]" attr-for-selected="name" class="drawer-list nav-menu" role="navigation">
+          <paper-item>
+            <a name="server-list" href="/server-list">
+              <iron-icon icon="device:dvr" class="menu-icon"></iron-icon>Server List
+            </a>
+          </paper-item>
+          <paper-item>
+            <a name="server-add" href="/server-add">
+              <iron-icon icon="icons:add" class="menu-icon"></iron-icon>Server Add
+            </a>
+          </paper-item>
+          <paper-submenu>
+            <paper-item class="menu-trigger"><iron-icon icon="icons:assignment" class="menu-icon"></iron-icon>Logs</paper-item>
+            <paper-menu class="menu-content">
+              <paper-item>
+                <a name="logs-by-ip" href="/logs-by-ip">
+                  Logs by IP
+                </a>
+              </paper-item>
+              <paper-item>
+                <a name="logs-day" href="/logs-day">
+                  Last day 
+                </a>
+              </paper-item>
+            </paper-menu>
+          </paper-submenu>
+          <paper-submenu>
+            <paper-item class="menu-trigger"><iron-icon icon="icons:grade" class="menu-icon"></iron-icon>Tags</paper-item>
+            <paper-menu class="menu-content">
+              <paper-item>
+                <a name="tag-add" href="/tag-add">
+                  Add Tag
+                </a>
+              </paper-item>
+              <paper-item>
+                <a name="tag-list" href="/tag-list">
+                  Show Tags 
+                </a>
+              </paper-item>
+            </paper-menu>
+          </paper-submenu>
+          <paper-submenu>
+            <paper-item class="menu-trigger"><iron-icon icon="icons:record-voice-over" class="menu-icon"></iron-icon>Users</paper-item>
+            <paper-menu class="menu-content">
+              <paper-item>
+                <a name="user-add" href="/user-add">
+                  Add User
+                </a>
+              </paper-item>
+              <paper-item>
+                <a name="user-list" href="/user-list">
+                  Show Users 
+                </a>
+              </paper-item>
+            </paper-menu>
+          </paper-submenu>          
+          <paper-item>
+            <a name="profile" href="/profile">
+              <iron-icon icon="icons:settings" class="menu-icon"></iron-icon>Profile
+            </a>
+          </paper-item>
+          <paper-item>
+            <a name="logout" href="/logout">
+              <iron-icon icon="icons:settings-power" class="menu-icon"></iron-icon>Logout
+            </a>
+          </paper-item>
+        </paper-menu>
+
+      </app-drawer>
+
+      <!-- Main content -->
+      <app-header-layout has-scrolling-region>
+
+        <app-header condenses reveals effects="waterfall">
+          <app-toolbar>
+            <!-- Menu toggle button -->
+            <paper-icon-button icon="my-icons:menu" onclick="_menuToggle()"></paper-icon-button> 
+          </app-toolbar>
+        </app-header>
+
+        <iron-pages
+            selected="[[page]]"
+            selected-attribute="active"
+            attr-for-selected="name"
+            fallback-selection="view404"            
+            role="main">
+          <sm-user-add name="user-add"></sm-user-add>
+          <sm-user-delete name="user-delete"></sm-user-delete>
+          <sm-user-list name="user-list"></sm-user-list>
+          <sm-view404 name="view404"></sm-view404>
+        </iron-pages>
+      </app-header-layout>
+    </app-drawer-layout>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'sm-app',
+
+      properties: {
+        page: {
+          type: String,
+          reflectToAttribute: true,
+          observer: '_pageChanged',
+        },
+      },      
+
+      observers: [
+        '_routePageChanged(routeData.page)',
+      ],
+
+      _routePageChanged: function(page) {
+        this.page = page || 'user-add';
+
+        if (!this.$.drawer.persistent) {
+          this.$.drawer.close();
+        }
+      },
+
+      _pageChanged: function(page) {
+        var resolvedPageUrl = this.resolveUrl('sm-' + page + '.html');
+        this.importHref(resolvedPageUrl, null, this._showPage404, true);
+      },
+
+      _showPage404: function() {
+        this.page = 'view404';
+      },
+    });
+
+    function _menuToggle() {
+      var layout = document.querySelector('app-drawer-layout');
+      var drawer = document.querySelector('app-drawer');
+      if (drawer.opened) {
+        drawer.close();
+        layout.responsiveWidth = screen.width + "px";
+      }
+      else {        
+        layout.responsiveWidth = screen.width - drawer.getWidth() + "px";
+        drawer.open();
+      }      
+    }
+  </script>
+</dom-module>
