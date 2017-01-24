@@ -28,10 +28,10 @@ var Server = class {
 
         db.exec(transaction, (err) => {
             if (err) {                
-                callback(false, "Error: while adding servers.");
+                callback("Error: while adding servers.");
             }
             else {
-                callback(true, "Success: servers added.")
+                callback(null, "Success: servers added.")
             }
         });
     }
@@ -51,10 +51,10 @@ var Server = class {
         db.exec(query, (err) => {            
             if (err) {         
                 console.log(err);       
-                callback(false, "Error: while deleting server.");
+                callback("Error: while deleting server.");
             }
             else {
-                callback(true, "Success: server deleted.")
+                callback(null, "Success: server deleted.")
             }
         });
     }
@@ -78,17 +78,20 @@ var Server = class {
 
         db.exec(query, (err) => {
             if (err) {                         
-                callback(false, "Error: while modife server(s) tags.");
+                callback("Error: while modife server(s) tags.");
             }
             else {
-                callback(true, "Success: tags modified.");
+                callback(null, "Success: tags modified.");
             }
         });
     }
 
     static togglePauseRun(idArray, userId, callback) {
-        this.findById(idArray, (result, servers) => {
-            if (result) {
+        this.findById(idArray, (err, servers) => {
+            if (err) {
+                callback("Error: while getting id`s.");                
+            }
+            else {
                 var transaction = '';
                 var dateNow = Date.now();
 
@@ -107,15 +110,12 @@ var Server = class {
 
                 db.exec(query, (err) => {
                     if (err) {                
-                        callback(false, "Error: while toggle pause-run.");
+                        callback("Error: while toggle pause-run.");
                     }
                     else {
-                        callback(true, "Success: while toggle pause-run.");
+                        callback(null, "Success: while toggle pause-run.");
                     }
                 });
-            }
-            else {
-                callback(false, "Error: while getting id`s.")
             }
         });
     }
@@ -132,10 +132,10 @@ var Server = class {
 
         db.all(query+whereCondition, (err, servers) => {
             if (err) {                
-                callback(false, "Error: while getting servers info by id.");
+                callback("Error: while getting servers info by id.");
             }
             else {
-                callback(true, servers);
+                callback(null, servers);
             }
         });
     }
@@ -152,10 +152,10 @@ var Server = class {
 
         db.all(query+whereCondition, (err, servers) => {
             if (err) {                
-                callback(false, "Error: while getting servers info by ip.");
+                callback("Error: while getting servers info by ip.");
             }
             else {
-                callback(true, servers);
+                callback(null, servers);
             }
         });
     }
@@ -171,10 +171,10 @@ var Server = class {
 
         db.all(query, (err, servers) => {
             if (err) {                
-                callback(false, "Error: while getting servers info.");
+                callback("Error: while getting servers info.");
             }
             else {
-                callback(true, servers);
+                callback(null, servers);
             }
         });
     }

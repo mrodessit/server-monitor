@@ -7,12 +7,12 @@ router.post('/server/add/array', (req, res) => {
     if ("servers" in req.body) {        
         var ipArray = req.body.servers.split(/\r?\n/);
         
-        server.createFromArray(ipArray, (result, data) => {
-            if (result) {
-                res.json(jsonResponse.Success(data));
+        server.createFromArray(ipArray, (err, data) => {
+            if (err) {
+                res.json(jsonResponse.Error(err));                
             }
             else {
-                res.json(jsonResponse.Error(data));
+                res.json(jsonResponse.Success(data));
             }
         });
     }
@@ -27,14 +27,14 @@ router.post('/server/tags/:action', (req, res) => {
 
         var userId = 0; // TO-DO: get userId from session
 
-        server.editServerTags(tagsData, userId, (result, data) => {
-            if (result) {
-                res.json(jsonResponse.Success(data));
+        server.editServerTags(tagsData, userId, (err, data) => {
+            if (err) {
+                res.json(jsonResponse.Error(err));
             }
             else {
-                res.json(jsonResponse.Error(data));
+                res.json(jsonResponse.Success(data));                
             }
-        })
+        });
     }
     else {
         res.json(jsonResponse.Error("Error: incorrect params!"));
@@ -44,12 +44,12 @@ router.post('/server/tags/:action', (req, res) => {
 router.get('/server/delete/:ids', (req, res) => {
     var idArray = req.params.ids.split(',');
 
-    server.delete(idArray, (result, data) => {
-        if (result) {
-            res.json(jsonResponse.Success(data));
+    server.delete(idArray, (err, data) => {
+        if (err) {
+            res.json(jsonResponse.Error(err));
         }
         else {
-            res.json(jsonResponse.Error(data));
+            res.json(jsonResponse.Success(data));            
         }
     });
 });
@@ -58,23 +58,23 @@ router.get('/server/pause-run/:ids', (req, res) => {
     var idArray = req.params.ids.split(',');
     var userId = 0; // TO-DO: get userId from session
 
-    server.togglePauseRun(idArray, userId, (result, data) => {
-        if (result) {
-            res.json(jsonResponse.Success(data));
+    server.togglePauseRun(idArray, userId, (err, data) => {
+        if (err) {
+            res.json(jsonResponse.Error(err));
         }
         else {
-            res.json(jsonResponse.Error(data));
+            res.json(jsonResponse.Success(data));            
         }
     });
 });
 
 router.get('/server/get/list', (req, res) => {
-    server.list((result, data) => {
-        if (result) {
-            res.json(jsonResponse.Data(data));
+    server.list((err, data) => {
+        if (err) {
+            res.json(jsonResponse.Error(err));            
         }
         else {
-            res.json(jsonResponse.Error(data));
+            res.json(jsonResponse.Data(data));
         }
     });
 });
@@ -82,12 +82,12 @@ router.get('/server/get/list', (req, res) => {
 router.get('/server/get/id/:ids', (req, res) => {    
     var idArray = req.params.ids.split(',');
 
-    server.findById(idArray, (result, data) => {
-        if (result) {
-            res.json(jsonResponse.Data(data));
+    server.findById(idArray, (err, data) => {
+        if (err) {
+            res.json(jsonResponse.Error(err));            
         }
         else {
-            res.json(jsonResponse.Error(data));
+            res.json(jsonResponse.Data(data));
         }
     });
 });
@@ -95,12 +95,12 @@ router.get('/server/get/id/:ids', (req, res) => {
 router.get('/server/get/ip/:ips', (req, res) => {
     var ipArray = req.params.ips.split(',');
 
-    server.findByIp(ipArray, (result, data) => {
-        if (result) {
-            res.json(jsonResponse.Data(data));
+    server.findByIp(ipArray, (err, data) => {
+        if (err) {
+            res.json(jsonResponse.Error(err));            
         }
         else {
-            res.json(jsonResponse.Error(data));
+            res.json(jsonResponse.Data(data));
         }
     });
 });

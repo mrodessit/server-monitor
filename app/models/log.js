@@ -11,10 +11,10 @@ var Log = class {
 
         db.all(query, id, (err, logs) => {
             if (err) {
-                callback(false, "Error: while getting logs by ID.");
+                callback("Error: while getting logs by ID.");
             }
             else {
-                callback(true, logs);
+                callback(null, logs);
             }
         });
     }
@@ -28,10 +28,10 @@ var Log = class {
 
         db.all(query, [start, end], (err, logs) => {
             if (err) {
-                callback(false, "Error: while getting logs by date range.");
+                callback("Error: while getting logs by date range.");
             }
             else {
-                callback(true, logs);
+                callback(null, logs);
             }
         });
     }

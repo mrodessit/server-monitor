@@ -3,18 +3,18 @@ var bcrypt  = require('../helpers/crypt');
 
 var Tag = class {
 
-    static create(tag, userId, callback) {        
-        db.run("INSERT INTO tags_table (tag, is_system, color) VALUES (?, ?, ?)", [tag.tag, 0, tag.color], (err) => {            
+    static create(tagData, userId, callback) {        
+        db.run("INSERT INTO tags_table (tag, is_system, color) VALUES (?, ?, ?)", [tagData.tag, 0, tagData.color], (err) => {            
             if (err) {
-                callback(false, "Error: while adding new tag!");
+                callback("Error: while adding new tag!");
             }
             else {
-                db.run("INSERT INTO users_tags_table(username, tag) VALUES(? , (SELECT id FROM tags_table WHERE tag= ? ))", [userId, tag.tag], (err) => {
+                db.run("INSERT INTO users_tags_table(username, tag) VALUES(? , (SELECT id FROM tags_table WHERE tag= ? ))", [userId, tagData.tag], (err) => {
                     if (err) {
-                        callback(false, "Error: while adding new tag (users_tags_table)!");
+                        callback("Error: while adding new tag (users_tags_table)!");
                     }
                     else {
-                        callback(true, "Success: new tag added.");
+                        callback(null, "Success: new tag added.");
                     }
                 });                
             }
@@ -24,13 +24,13 @@ var Tag = class {
     static delete(id, callback) {
         db.run("DELETE FROM tags_table WHERE id= ? ", id, (err) => {
             if (err) {
-                callback(false, "Error: while deleting tag.");
+                callback("Error: while deleting tag.");
             }
             else {
                 db.run("DELETE FROM server_tags_table WHERE tag= ? ", id);
                 db.run("DELETE FROM users_tags_table WHERE tag= ?", id);
 
-                callback(true, "Success: tag deleted.");
+                callback(null, "Success: tag deleted.");
             }
         });
     }
@@ -38,10 +38,10 @@ var Tag = class {
     static update(tag, callback) {
         db.run("UPDATE tags_table SET tag= ? , color= ? WHERE id= ? ", [tag.tag, tag.color, tag.id] , (err) => {
             if (err) {
-                callback(false, "Error: while updating new tag!");
+                callback("Error: while updating new tag!");
             }
             else {
-                callback(true, "Success: tag updated.");
+                callback(null, "Success: tag updated.");
             }
         });
     }
@@ -49,14 +49,14 @@ var Tag = class {
     static findById(id, callback) {
         db.get("SELECT * FROM tags_table WHERE id= ? ", id, (err, tag) => {
             if (err) {
-                callback(false, "Error: while getting tag by id!");
+                callback("Error: while getting tag by id!");
             }
             else {
                 if (tag === undefined) {
-                    callback(false, "Error: no results for that id!");
+                    callback("Error: no results for that id!");
                 }   
                 else {
-                    callback(true, tag);
+                    callback(null, tag);
                 }                             
             }
         });
@@ -65,10 +65,10 @@ var Tag = class {
     static findByName(name, callback) {
         db.get("SELECT * FROM tags_table WHERE tag= ? ", name, (err, tag) => {
             if (err) {
-                callback(false, "Error: while getting tag by name!");
+                callback("Error: while getting tag by name!");
             }
             else {                
-                callback(true, tag);
+                callback(null, tag);
             }
         });
     }
@@ -76,10 +76,10 @@ var Tag = class {
     static list(callback) {
         db.all("SELECT * FROM tags_table", (err, tags) => {
             if (err) {
-                callback(false, "Error: while getting tag by name!");
+                callback("Error: while getting tag by name!");
             }
             else {
-                callback(true, tags);
+                callback(null, tags);
             }
         });
     }

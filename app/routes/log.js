@@ -4,12 +4,12 @@ var log          = require('../models/log.js');
 var jsonResponse = require('../helpers/json-response');
 
 router.get('/log/server/id/:id', (req, res) => { 
-    log.findByServerId(req.params.id, (result, data) => {
-        if (result) {
-            res.json(jsonResponse.Data(data));
+    log.findByServerId(req.params.id, (err, data) => {
+        if (err) {
+            res.json(jsonResponse.Error(err));            
         }
         else {
-            res.json(jsonResponse.Error(data));
+            res.json(jsonResponse.Data(data));
         }
     });
 });
@@ -39,12 +39,12 @@ router.get('/log/date/:type', (req, res) => { // date types: day, month, year
             break;
     }    
 
-    log.findByDateRange(start.getTime(), end.getTime(), (result, data) => {
-        if (result) {
-            res.json(jsonResponse.Data(data));
+    log.findByDateRange(start.getTime(), end.getTime(), (err, data) => {
+        if (err) {
+            res.json(jsonResponse.Error(err));            
         }
         else {
-            res.json(jsonResponse.Error(data));
+            res.json(jsonResponse.Data(data));
         }
     });
 });

@@ -1,46 +1,113 @@
-var dbUser = require('../config/db-json');
-var bcrypt = require('../helpers/crypt'); 
+var async   = require('async');
+var dbUser  = require('../config/db-json');
+var crypt   = require('../helpers/crypt'); 
 
-var User = class {    
+var User = class {
 
     static create(user, callback) {
-
-        this.validateUserObject(user, (result) => {
-            if (result) {                
-                user.password = bcrypt.hashPassword(user.password);
-
-                dbUser.save(user, (err, id) => {
-                    if (err) {
-                        callback(false, "Error: while adding new user!"); 
-                    }
-                    else {
-                        callback(true, "Success: User created. Id: "+id+".");
-                    }
-                });
+        async.waterfall([
+            async.apply(this.validateNewUserObject, user),
+            this.hashUserPassword,
+            this.saveUser
+        ], (err, id) => {
+            if (err) {
+                callback(err);
             }
             else {
-                callback(false, "Error: data incorrect!");
+                callback(null, `Success: User created. Id: ${id}.`);
             }
-        });                
+        });           
+    }    
+
+    static validateNewUserObject(user, callback) {
+        if ("username" in user && "password" in user && "isadmin" in user) {
+            if (user.username.length > 4 && user.password.length > 6 && (user.isadmin == 1 || user.isadmin == 0)) {
+                callback(null, user);
+            }
+            else {
+                callback("Error: incorrect params data.");
+            }
+        }
+        else {
+            callback("Error: missing data.");
+        }        
     }
 
-    static update(updateData, callback) {
-        
-        this.validateNewPasswordObject(updateData, (result, user) => {
-            if (result) {                                
-                user.password = bcrypt.hashPassword(updateData.newPassword1);
-
-                dbUser.save(user.id, user, (err, id) => {
-                    if (!err) {
-                        callback(true, "Success: User update. Id: "+id+".");
-                    }
-                    else {
-                        callback(false, "Error: while updating !");            
-                    }
-                });
+    static hashUserPassword(user, callback) {
+        crypt.getStringHash(user.password, (err, hash) => {
+            if (err) {
+                callback(err);
             }
             else {
-                callback(false, "Error: data incorrect!");
+                user.password = hash;
+                callback(null, user);
+            }
+        });
+    }
+
+    static saveUser(user, callback) {
+        if ("id" in user && user.id != null) {
+            dbUser.save(user.id, user, (err, id) => {    
+                if (err) {
+                callback("Error: while adding new user!");                
+                }
+                else {
+                    callback(null, id);
+                }
+            });
+        }
+        else {
+            dbUser.save(user, (err, id) => {    
+                if (err) {
+                callback("Error: while adding new user!");                
+                }
+                else {
+                    callback(null, id);
+                }
+            });
+        }
+    } 
+
+    static update(updateData, callback) {
+
+        async.waterfall([
+            async.apply(this.validateNewPasswordObject, updateData),
+            this.findById,
+            async.apply(this.compareNewAndUserPassword, updateData),
+            this.hashUserPassword,
+            this.saveUser
+        ], function(err, id) {
+            if (err) {
+                callback(err);
+            }
+            else {
+                callback(null, `Success: User updated. Id: ${id}.`);
+            }
+        });        
+    }
+
+    static validateNewPasswordObject(newPasswordObject, callback) {
+        if ("id" in newPasswordObject && "oldPassword" in newPasswordObject && "newPassword1" in newPasswordObject && "newPassword2" in newPasswordObject) {
+            if (newPasswordObject.newPassword1.length > 6 && newPasswordObject.newPassword2.length > 6 && newPasswordObject.newPassword1 == newPasswordObject.newPassword2) {
+                callback(null, newPasswordObject.id);
+            }
+            else {
+                callback("Error: incorrect new password data.");
+            }
+        }
+        else {
+            callback("Error: missing data.");
+        }
+    }
+
+    static compareNewAndUserPassword(newPasswordObject, user, callback) {
+        crypt.compareHash(newPasswordObject.oldPassword, user.password, (err) => {
+            if (err) {
+                callback(err);
+            }
+            else {
+                user.password = newPasswordObject.newPassword1;
+                callback(null, user);
             }
         });
     }
@@ -48,10 +115,10 @@ var User = class {
     static delete(id, callback) {
         dbUser.delete(id, (err) => {
             if (err) {
-                callback(false, "Error: while deleting user by id!"); 
+                callback("Error: while deleting user by id!"); 
             }
             else {
-                callback(true, "Success: user deleted!");
+                callback(null, "Success: user deleted!");
             }
         });
     }
@@ -59,10 +126,10 @@ var User = class {
     static findById(id, callback) {
         dbUser.get(id, (err, user) => {
             if (err) {
-                callback(false, "Error: while selecting user by id!"); 
+                callback("Error: while selecting user by id!"); 
             }
             else {
-                callback(true, user);
+                callback(null, user);
             }
         });
     }
@@ -70,7 +137,7 @@ var User = class {
     static findByName(username, callback) {
         dbUser.all((err, users) => {
            if (err) {
-               callback(false, "Error: while selecting users!");
+               callback("Error: while selecting users!");
            } 
            else {
                 var userData = null;
@@ -82,7 +149,7 @@ var User = class {
                     }
                 }
 
-                callback(true, userData);
+                callback(null, userData);
            }
         });
     }
@@ -90,7 +157,7 @@ var User = class {
     static list(callback) {
         dbUser.all((err, users) => {
             if (err) {                
-                callback(false, "Error: while selecting all users!");
+                callback("Error: while selecting all users!");
             }
             else {
                 var usersObjectArray = [];
@@ -99,61 +166,10 @@ var User = class {
                     usersObjectArray.push(users[user]);
                 }
 
-                callback(true, usersObjectArray);
+                callback(null, usersObjectArray);
             }
         });
     }    
-
-    static validateUserObject(user, callback) {
-        var checkNewUserData = false;
-
-        if ("username" in user && user.username.length > 4) {
-            if ("password" in user && user.password.length > 6 ) {
-                if ("isadmin" in user && (user.isadmin == 1 || user.isadmin == 0)) {
-                    checkNewUserData = true;
-                }
-            }
-        }
-
-        callback(checkNewUserData);
-    }
-
-    static validateNewPasswordObject(password, callback) {
-        var checkNewPasswordObject = false;
-
-        if ("id" in password && "oldPassword" in password) {
-            if ("newPassword1" in password && "newPassword1" in password) {
-                if (password.newPassword1.length > 6 && password.newPassword2.length > 6 && password.newPassword1 == password.newPassword2) {
-                    checkNewPasswordObject = true;
-                }
-            }
-        }
-
-        if (checkNewPasswordObject) {
-            this.compareUserIdPassword(password.id, password.oldPassword, (result, user) => {                
-                callback(result, user);
-            });
-        }
-        else {
-            callback(checkNewPasswordObject);
-        }        
-    }
-
-    static compareUserIdPassword(id, password, callback) {
-        dbUser.get(id, (err, user) => {
-            if (err) {
-                callback(false);
-            }
-            else {                
-                if (bcrypt.comparePassword(password, user.password)) {
-                    callback(true, user);
-                }
-                else {
-                    callback(false);
-                }
-            }
-        });
-    }
 }
 
 module.exports = User;

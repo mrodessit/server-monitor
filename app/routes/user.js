@@ -4,24 +4,24 @@ var user        = require('../models/user');
 var jsonResponse = require('../helpers/json-response');
 
 router.post('/user/add', (req, res) => {
-    user.create(req.body, (result, data) => {    
-        if (result) {
-            res.json(jsonResponse.Success(data));
+    user.create(req.body, (err, data) => {    
+        if (err) {
+            res.json(jsonResponse.Error(err));            
         }
         else {
-            res.json(jsonResponse.Error(data));
+            res.json(jsonResponse.Success(data));            
         }
     });
 });
 
 router.post('/user/delete', (req, res) => {
     if ("id" in req.body) {
-        user.delete(req.body.id, (result, data) => {     
-            if (result) {
-                res.json(jsonResponse.Success(data));
+        user.delete(req.body.id, (err, data) => {     
+            if (err) {
+                res.json(jsonResponse.Error(err));                
             }
             else {
-                res.json(jsonResponse.Error(data));
+                res.json(jsonResponse.Success(data));
             }
         });
     }
@@ -31,30 +31,33 @@ router.post('/user/delete', (req, res) => {
 });
 
 router.post('/user/update', (req, res) => {   
-    user.update(req.body, (result, data) => {      
-        if (result) {
-            res.json(jsonResponse.Success(data));
+    user.update(req.body, (err, data) => {      
+        if (err) {
+            res.json(jsonResponse.Error(err));            
         }
         else {
-            res.json(jsonResponse.Error(data));
+            res.json(jsonResponse.Success(data));
         }
     });
 });
 
 router.get('/user/get/id/:id', (req, res) => {    
-    user.findById(req.params.id, (result, data) => {
-        if (result) {
-            res.json(jsonResponse.Data(data));
+    user.findById(req.params.id, (err, data) => {
+        if (err) {
+            res.json(jsonResponse.Error(err));            
         }
         else {
-            res.json(jsonResponse.Error(data));
+            res.json(jsonResponse.Data(data));
         }
     });
 });
 
 router.get('/user/get/name/:name', (req, res) => {  
-    user.findByName(req.params.name, (result, data) => {
-        if (result) {
+    user.findByName(req.params.name, (err, data) => {
+        if (err) { // error while get all users
+            res.json(jsonResponse.Error(err));            
+        }
+        else { 
             if (data != null) { // user found
                 res.json(jsonResponse.Data(data));
             }
@@ -62,19 +65,16 @@ router.get('/user/get/name/:name', (req, res) => {
                 res.json(jsonResponse.Error('Error: no user found!'));
             }
         }
-        else { // error while get all users
-            res.json(jsonResponse.Error(data));
-        }
     });
 });
 
 router.get('/user/get/list', (req, res) => {
-    user.list((result, data) => {
-        if (result) {
-            res.json(jsonResponse.Data(data));
+    user.list((err, data) => {
+        if (err) {
+            res.json(jsonResponse.Error(err));            
         }
         else {
-            res.json(jsonResponse.Error(data));
+            res.json(jsonResponse.Data(data));
         }
     });
 });

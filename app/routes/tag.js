@@ -7,12 +7,12 @@ router.post('/tag/add', (req, res) => {
     if ("tag" in req.body && "color" in req.body) {
         var userId = 0; // TODO get user ID from session
 
-        tag.create(req.body, userId, (result, data) => {        
-            if (result) {
-                res.json(jsonResponse.Success(data));
+        tag.create(req.body, userId, (err, data) => {        
+            if (err) {
+                res.json(jsonResponse.Error(err));                
             }
             else {
-                res.json(jsonResponse.Error(data));
+                res.json(jsonResponse.Success(data));
             }
         });
     }
@@ -23,12 +23,12 @@ router.post('/tag/add', (req, res) => {
 
 router.post('/tag/delete', (req, res) => {
     if ("id" in req.body) {
-        tag.delete(req.body.id, (result, data) => {       
-            if (result) {
-                res.json(jsonResponse.Success(data));
+        tag.delete(req.body.id, (err, data) => {       
+            if (err) {
+                res.json(jsonResponse.Error(err));                
             }
             else {
-                res.json(jsonResponse.Error(data));
+                res.json(jsonResponse.Success(data));
             }
         });
     }
@@ -39,13 +39,12 @@ router.post('/tag/delete', (req, res) => {
 
 router.post('/tag/update', (req, res) => {
     if ("id" in req.body && "tag" in req.body && "color" in req.body) {
-        tag.update(req.body, (result, data) => {
-        
-            if (result) {
-                res.json(jsonResponse.Success(data));
+        tag.update(req.body, (err, data) => {        
+            if (err) {
+                res.json(jsonResponse.Error(err));                
             }
             else {
-                res.json(jsonResponse.Error(data));
+                res.json(jsonResponse.Success(data));
             }
         });
     }
@@ -55,19 +54,22 @@ router.post('/tag/update', (req, res) => {
 });
 
 router.get('/tag/get/id/:id', (req, res) => {     
-    tag.findById(req.params.id, (result, data) => {
-        if (result) {
-            res.json(jsonResponse.Data(data));
+    tag.findById(req.params.id, (err, data) => {
+        if (err) {
+            res.json(jsonResponse.Error(err));            
         }
         else {
-            res.json(jsonResponse.Error(data));
+            res.json(jsonResponse.Data(data));
         }
     });
 });
 
 router.get('/tag/get/name/:name', (req, res) => {
-    tag.findByName(req.params.name, (result, data) => {
-        if (result) {
+    tag.findByName(req.params.name, (err, data) => {
+        if (err) { // error while get all users
+            res.json(jsonResponse.Error(err));            
+        }
+        else { 
             if (data != null) { // user found
                 res.json(jsonResponse.Data(data));
             }
@@ -75,19 +77,16 @@ router.get('/tag/get/name/:name', (req, res) => {
                 res.json(jsonResponse.Error('Error: no user found!'));
             }
         }
-        else { // error while get all users
-            res.json(jsonResponse.Error(data));
-        }
     });
 });
 
 router.get('/tag/get/list', (req, res) => {
-    tag.list((result, data) => {
-        if (result) {
-            res.json(jsonResponse.Data(data));
+    tag.list((err, data) => {
+        if (err) {
+            res.json(jsonResponse.Error(err));            
         }
         else {
-            res.json(jsonResponse.Error(data));
+            res.json(jsonResponse.Data(data));
         }
     });
 });
