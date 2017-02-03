@@ -2,6 +2,7 @@ var express      = require('express');
 var router       = express.Router();
 var server       = require('../models/server');
 var jsonResponse = require('../helpers/json-response');
+var serverDataTable = require('../models/serverDataTable');
 
 router.post('/server/add/array', (req, res) => {
     if ("servers" in req.body) {        
@@ -68,6 +69,19 @@ router.get('/server/pause-run/:ids', (req, res) => {
     });
 });
 
+router.get('/server/get/datatable', (req, res) => {
+    var serverData = new serverDataTable(req.query);
+
+    serverData.finalize((err, data) => {
+        if (err) {
+            res.json(jsonResponse.Error(err));
+        }
+        else {
+            res.json(data);
+        }
+    });
+});
+
 router.get('/server/get/list', (req, res) => {
     server.list((err, data) => {
         if (err) {
@@ -86,8 +100,13 @@ router.get('/server/get/id/:ids', (req, res) => {
         if (err) {
             res.json(jsonResponse.Error(err));            
         }
-        else {
-            res.json(jsonResponse.Data(data));
+        else {       
+            if (data.length) {
+                res.json(jsonResponse.Data(data));
+            }
+            else {
+                res.json(jsonResponse.Error("Error: no data for that ID!"));            
+            }
         }
     });
 });

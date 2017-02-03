@@ -1,0 +1,46 @@
+
+<link rel="import" href="../imports/table.html">
+
+<dom-module id="logs-day">
+  <template>    
+    
+    <link rel="stylesheet" type="text/css" href="../css/dataTables.custom.css">  
+    <style include="shared-styles"></style>
+        
+    <div class="card">        
+        <table id="tableLogsDay" class="mdl-data-table" width="100%" cellspacing="0"></table>
+    </div>  
+
+  </template>
+
+  <script>
+    Polymer({
+      is: 'logs-day',
+
+      properties: {            
+            active: {
+                type: Boolean,
+                value: false,
+                observer: '_activeChanged'
+            },
+      },
+
+      ready: function() {
+          $(this.$.tableLogsDay).DataTable({
+            columns: [
+                {title: "server id"},
+                {title: "server ip"},
+                {title: "event"},
+                {title: "date"},
+            ]
+          });
+      },
+
+      _activeChanged: function(active) {
+            if (active) {                
+                ee.emitEvent(appConfig.event.logsDate, ['day', this.$.tableLogsDay]);
+            }
+        },
+    });
+  </script>
+</dom-module>

@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+    <title>Server Monitor</title>
+    <meta name="description" content="server monitor">
+
+    <link rel="icon" href="/images/favicon.ico">
+
+    <link rel="manifest" href="/manifest.json">
+
+    <!-- See https://goo.gl/qRE0vM -->
+    <meta name="theme-color" content="#3f51b5">
+
+    <!-- Add to homescreen for Chrome on Android. Fallback for manifest.json -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="server monitor">
+
+    <script>
+
+      window.Polymer = {
+        dom: 'shadow',
+        lazyRegister: true,
+      };
+      
+      (function() {
+        'use strict';
+
+        var onload = function() {
+
+          if (!window.HTMLImports) {
+            document.dispatchEvent(
+              new CustomEvent('WebComponentsReady', {bubbles: true})
+            );
+          }
+        };
+
+        var webComponentsSupported = (
+          'registerElement' in document
+          && 'import' in document.createElement('link')
+          && 'content' in document.createElement('template')
+        );
+
+        if (!webComponentsSupported) {
+          var script = document.createElement('script');
+          script.async = true;
+          script.src = '/bower_components/webcomponentsjs/webcomponents-lite.min.js';
+          script.onload = onload;
+          document.head.appendChild(script);
+        } else {
+          onload();
+        }
+      })();
+
+      // Load pre-caching Service Worker
+      
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+          navigator.serviceWorker.register('/service-worker.js');
+        });
+      }
+      
+    </script>    
+
+    <link rel="stylesheet" type="text/css" href="css/main.css">    
+
+    <script type="text/javascript" language="javascript" src="bower_components/eventEmitter/EventEmitter.min.js"></script>
+    <script type="text/javascript" language="javascript" src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.13/js/dataTables.material.min.js"></script>
+
+    <script type="text/javascript" language="javascript" src="js/config.js"></script>
+    <script type="text/javascript" language="javascript" src="js/utils.js"></script>
+    <script type="text/javascript" language="javascript" src="js/buttons.helper.js"></script>
+    <script type="text/javascript" language="javascript" src="js/ajax.helper.js"></script>
+    <script type="text/javascript" language="javascript" src="js/events.server.js"></script>
+    <script type="text/javascript" language="javascript" src="js/events.log.js"></script>
+    <script type="text/javascript" language="javascript" src="js/events.tag.js"></script>
+    <script type="text/javascript" language="javascript" src="js/events.user.js"></script>
+    <script type="text/javascript" language="javascript" src="js/events.manager.js"></script>
+
+    <link rel="import" href="/pages/app-main.html">
+    
+  </head>
+  <body unresolved fullbleed>      
+    <app-main></app-main>
+  </body>
+</html>

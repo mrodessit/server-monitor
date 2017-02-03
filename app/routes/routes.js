@@ -1,10 +1,11 @@
-
+var isAuth      = require('../middlewares/authenticate');
+var appConfig   = require('../config/app');
 
 module.exports = function(app, passport) {
 
     // allow CORS
     app.use(function(req, res, next) {
-        res.setHeader("Access-Control-Allow-Origin", "http://localhost:8000");
+        res.setHeader("Access-Control-Allow-Origin", `http://${appConfig.host}:${appConfig.port}`);
         res.setHeader("Access-Control-Allow-Credentials", "true");
         res.setHeader("Access-Control-Allow-Methods", "OPTIONS, POST, GET");
         res.setHeader("Access-Control-Expose-Headers","Access-Control-Allow-Origin");
@@ -12,21 +13,24 @@ module.exports = function(app, passport) {
         next();
     });
 
+    // authenticate routes
+    app.use('/', require('./authenticate'));
+
     // users control routes
-    app.use('/api', require('./user'));
+    app.use('/api', isAuth, require('./user'));
 
     // tag control routes
-    app.use('/api', require('./tag'));
+    app.use('/api', isAuth, require('./tag'));
 
     // server control routes
-    app.use('/api', require('./server')) 
+    app.use('/api', isAuth, require('./server'));
 
     // log control routes
-    app.use('/api', require('./log'))    
+    app.use('/api', isAuth, require('./log'));
 
-    // error page
-    app.get('/error', function(req, res) {
-        res.sendStatus(404);
-	});
+    // send static polymer index
+    app.get('*', isAuth, function(req, res) {
+        res.sendFile(appConfig.appPath + '/public/app.html');
+    });
 
 };

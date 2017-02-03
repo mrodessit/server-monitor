@@ -1,0 +1,35 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+
+<dom-module id="user-profile">    
+  <template>    
+        
+    <style>        
+    </style>
+
+    Profile    
+  </template>
+
+  <script>
+    Polymer({
+      is: 'user-profile',
+
+      properties: {            
+            active: {
+                type: Boolean,
+                value: false,
+                observer: '_activeChanged'
+            },
+      },
+
+      ready: function() {
+          
+      },
+
+      _activeChanged: function(active) {
+            if (active) {                
+          
+            }
+        },
+    });
+  </script>
+</dom-module>

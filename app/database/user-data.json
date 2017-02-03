@@ -5,10 +5,28 @@
     "isadmin": 1,
     "id": "1b9edcd3-55f1-4870-809b-73f84334200f"
   },
-  "1218ea7e-eeeb-4713-85e2-6f1ed4fc9d0a": {
-    "username": "test",
-    "password": "$2a$10$GBmxOyKY./5dukAY9RklceRkEP0YnVJRKp4OHOoFoiEQnI9bFspPK",
-    "isadmin": 1,
-    "id": "1218ea7e-eeeb-4713-85e2-6f1ed4fc9d0a"
+  "e3b1af22-9386-4e43-a3d7-2e44f27b50b4": {
+    "username": "dfsdf",
+    "password": "$2a$10$AdagEq6WgbkkR8HdOvq1reE8T/uQbXNTZRnP8M9odMXbY.zcUgdOm",
+    "isadmin": "1",
+    "id": "e3b1af22-9386-4e43-a3d7-2e44f27b50b4"
+  },
+  "8cffcb4a-4fd5-418e-9ad2-155ebff88467": {
+    "username": "KRULL",
+    "password": "$2a$10$60gnbycSv8A1FBrAQMCwRex1ttH9EnsxeBA5OasF4FgUiLzrgR07e",
+    "isadmin": "0",
+    "id": "8cffcb4a-4fd5-418e-9ad2-155ebff88467"
+  },
+  "b6fc6d16-4c44-4504-8164-63c8b262c8e4": {
+    "username": "olpopsodp",
+    "password": "$2a$10$hCczdZ2WNRcWO0JGL6SsoOlgJlZbdSWYwnXgY0MXr137rDXOow41q",
+    "isadmin": "0",
+    "id": "b6fc6d16-4c44-4504-8164-63c8b262c8e4"
+  },
+  "4ad5d607-2aaf-485f-899b-6decd3f48043": {
+    "username": "clear",
+    "password": "$2a$10$wTQyJUBYR9gAH/J2xeCAXON2mqYj4UjcTl.ND9rbSTdiLUspRKBby",
+    "isadmin": "0",
+    "id": "4ad5d607-2aaf-485f-899b-6decd3f48043"
   }
 }

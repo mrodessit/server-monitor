@@ -1,0 +1,17 @@
+{
+  "entrypoint": "index.html",
+  "shell": "pages/sm-app.html",
+  "fragments": [
+    "pages/sm-user-add.html",    
+    "pages/sm-404.html"
+  ],
+  "sourceGlobs": [
+    "pages/**/*",
+    "images/**/*",
+    "bower.json"
+  ],
+  "includeDependencies": [
+    "manifest.json",
+    "bower_components/webcomponentsjs/webcomponents-lite.min.js"
+  ]
+}

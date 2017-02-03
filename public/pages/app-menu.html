@@ -1,0 +1,127 @@
+
+<link rel="import" href="../imports/app.html">
+
+<dom-module id="app-menu">
+  <template>    
+    <style include="shared-styles">
+
+      paper-item {
+          border-bottom: 1px solid #DCDFE0;
+          cursor: pointer;
+      }
+
+      .nav-menu iron-icon {
+          padding-right: 10px;
+          color: #818181;
+      }
+
+      .nav-menu a {
+          text-decoration: none;
+          width: 100%;
+          color: #424242;
+      }
+
+      .nav-menu paper-item:hover {
+          background-color: #D9E9FA;
+      }      
+
+      paper-item {
+          --paper-item-selected: {
+              background: #D9EBFA;
+              font-weight: bold;
+          };
+          --paper-item-focused: {
+              background: #D9EBFA;
+              font-weight: bold;
+          };
+          --paper-item-focused-before: {
+              opacity: 0;
+          };
+      } 
+    </style>
+
+    <paper-menu selected="[[page]]" attr-for-selected="name" class="drawer-list nav-menu" role="navigation">
+        <paper-item>
+            <a name="server-list" href="/server-list">
+                <iron-icon icon="device:dvr" class="menu-icon"></iron-icon>Server List
+            </a>
+        </paper-item>
+        <paper-item>
+            <a name="server-add" href="/server-add">
+                <iron-icon icon="icons:add" class="menu-icon"></iron-icon>Server Add
+            </a>
+        </paper-item>
+        <paper-submenu>
+            <paper-item class="menu-trigger"><iron-icon icon="icons:assignment" class="menu-icon"></iron-icon>Logs</paper-item>
+            <paper-menu class="menu-content">
+                <paper-item>
+                <a name="logs-by-ip" href="/logs-by-ip">
+                    Logs by IP
+                </a>
+                </paper-item>
+                <paper-item>
+                <a name="logs-day" href="/logs-day">
+                    Last day 
+                </a>
+                </paper-item>
+            </paper-menu>
+        </paper-submenu>
+        <paper-submenu>
+            <paper-item class="menu-trigger"><iron-icon icon="icons:grade" class="menu-icon"></iron-icon>Tags</paper-item>
+            <paper-menu class="menu-content">
+                <paper-item>
+                <a name="tag-add" href="/tag-add">
+                    Add Tag
+                </a>
+                </paper-item>
+                <paper-item>
+                <a name="tag-list" href="/tag-list">
+                    Show Tags 
+                </a>
+                </paper-item>
+            </paper-menu>
+        </paper-submenu>
+        <paper-submenu>
+            <paper-item class="menu-trigger"><iron-icon icon="icons:record-voice-over" class="menu-icon"></iron-icon>Users</paper-item>
+            <paper-menu class="menu-content">
+                <paper-item>
+                <a name="user-add" href="/user-add">
+                    Add User
+                </a>
+                </paper-item>
+                <paper-item>
+                <a name="user-list" href="/user-list">
+                    Show Users 
+                </a>
+                </paper-item>
+            </paper-menu>
+        </paper-submenu>          
+        <paper-item>
+            <a name="user-profile" href="/user-profile">
+                <iron-icon icon="icons:settings" class="menu-icon"></iron-icon>Profile
+            </a>
+        </paper-item>
+        <paper-item on-click="_Logout">
+            
+                <iron-icon icon="icons:settings-power" class="menu-icon"></iron-icon>Logout
+            
+        </paper-item>
+    </paper-menu>
+
+  </template>
+
+  <script>
+    Polymer({
+        is: 'app-menu',
+
+        properties: {            
+              
+        },      
+
+        _Logout: function() {
+            window.location = '/logout';
+        }
+
+    });
+  </script>
+</dom-module>

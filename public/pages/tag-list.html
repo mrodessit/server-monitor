@@ -1,0 +1,47 @@
+
+<link rel="import" href="../imports/table.html">
+
+<dom-module id="tag-list">
+  <template>    
+    
+    <link rel="stylesheet" type="text/css" href="../css/dataTables.custom.css">  
+    <style include="shared-styles"></style>
+        
+    <div class="card">        
+        <table id="tableTagList" class="mdl-data-table" width="100%" cellspacing="0"></table>
+    </div>  
+
+  </template>
+
+  <script>
+    Polymer({
+      is: 'tag-list',
+
+      properties: {            
+            active: {
+                type: Boolean,
+                value: false,
+                observer: '_activeChanged'
+            },
+      },
+
+      ready: function() {
+          $(this.$.tableTagList).DataTable({
+            columns: [
+                {title: "id"},
+                {title: "tag name"},
+                {title: "is System"},
+                {title: "color"},
+                {title: "action"},
+            ]
+          });
+      },
+
+      _activeChanged: function(active) {
+            if (active) {                
+                ee.emit(appConfig.event.tagList, this.$.tableTagList);
+            }
+        },
+    });
+  </script>
+</dom-module>

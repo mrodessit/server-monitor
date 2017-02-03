@@ -1,0 +1,138 @@
+<link rel="import" href="../imports/app.html">
+<link rel="import" href="./app-menu.html">
+
+<dom-module id="app-main">
+  <template>
+    <style>
+      :host {
+        --app-primary-color: #4285f4;
+        --app-secondary-color: black;        
+
+        display: block;
+      }       
+
+      app-header {
+          color: #fff;
+          background-color: var(--app-primary-color);
+      }
+      app-header paper-icon-button {
+          --paper-icon-button-ink-color: white;
+      }
+
+      .drawer-list {
+          margin: 0 20px;
+      }      
+
+      .header-page-name {
+          margin-left: 15px;
+      }
+       
+    </style>
+    
+    <app-location route="{{route}}"></app-location>
+    <app-route
+        route="{{route}}"
+        pattern="/:page"
+        data="{{routeData}}"
+        tail="{{subroute}}">
+    </app-route>
+
+    <app-drawer-layout fullbleed>
+      <!-- Drawer content -->
+      <app-drawer id="drawer">
+        
+        <app-toolbar>Server Monitor</app-toolbar>        
+
+        <app-menu></app-menu>
+
+      </app-drawer>
+
+      <!-- Main content -->
+      <app-header-layout has-scrolling-region>
+
+        <app-header condenses reveals effects="waterfall">
+          <app-toolbar>            
+            <paper-icon-button icon="my-icons:menu" on-click="_menuToggle"></paper-icon-button> 
+            <h3 class="header-page-name">[[appUrlPath]]</h3>
+          </app-toolbar>
+        </app-header>
+
+        <iron-pages
+            selected="[[page]]"
+            selected-attribute="active"
+            attr-for-selected="name"
+            fallback-selection="app-404"            
+            role="main">          
+          <server-list name="server-list"></server-list>
+          <server-add name="server-add"></server-add>
+          <server-edit-tags name="server-edit-tags"></server-edit-tags>
+          <server-delete name="server-delete"></server-delete>
+          <logs-day name="logs-day"></logs-day>
+          <logs-by-ip name="logs-by-ip"></logs-by-ip>
+          <logs-by-id name="logs-by-id"></logs-by-id>  
+          <tag-add name="tag-add"></tag-add>
+          <tag-edit name="tag-edit"></tag-edit>
+          <tag-delete name="tag-delete"></tag-delete>
+          <tag-list name="tag-list"></tag-list>
+          <user-add name="user-add"></user-add>
+          <user-delete name="user-delete"></user-delete>
+          <user-edit name="user-edit"></user-edit>
+          <user-list name="user-list"></user-list>
+          <user-profile name="user-profile"></user-profile>
+          <app-404 name="app-404"></app-404>
+        </iron-pages>
+        
+      </app-header-layout>
+    </app-drawer-layout>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'app-main',
+
+      properties: {
+        page: {
+          type: String,
+          reflectToAttribute: true,
+          observer: '_pageChanged',
+        },
+      },      
+
+      observers: [
+        '_routePageChanged(routeData.page)',
+      ],
+
+      _routePageChanged: function(page) {        
+        this.page = page || 'server-list';
+
+        if (!this.$.drawer.persistent) {
+          this.$.drawer.close();
+        }
+      },
+
+      _pageChanged: function(page) {      
+        this.appUrlPath = page;
+        var resolvedPageUrl = this.resolveUrl(page + '.html');        
+        this.importHref(resolvedPageUrl, null, this._showPage404, true);        
+      },
+
+      _showPage404: function() {        
+        this.page = 'app-404';        
+      },
+
+      _menuToggle: function() {
+        var layout = this.$$('app-drawer-layout');
+        var drawer = this.$$('app-drawer');
+        if (drawer.opened) {
+          drawer.close();
+          layout.responsiveWidth = screen.width + "px";
+        }
+        else {        
+          layout.responsiveWidth = screen.width - drawer.getWidth() + "px";
+          drawer.open();
+        }   
+      }
+    });
+
+  </script>
+</dom-module>

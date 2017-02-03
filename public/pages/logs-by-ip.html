@@ -1,0 +1,74 @@
+
+<link rel="import" href="../imports/form.html">
+<link rel="import" href="../imports/table.html">
+
+<dom-module id="logs-by-ip">
+  <template>    
+    <link rel="stylesheet" type="text/css" href="../css/dataTables.custom.css">
+    <style include="shared-styles">      
+
+    #formLogByIp {
+        width: 400px;
+        display: block;
+        margin: 0 auto;
+    }
+
+    #formLogByIpValue {
+        width: 300px;
+        display: inline-block;
+    }
+
+    #formLogByIpSearchButton {
+        display: inline-block;
+    }
+    </style>
+
+    <div class="card">        
+        <form is="iron-form" id="formLogByIp">
+            <block-notify id="notifyFormLogByIp"></block-notify>
+            <paper-input name="ip" id="formLogByIpValue" label="IP Address"></paper-input>
+            <paper-button raised on-click="_postFormData" id="formLogByIpSearchButton">Search</paper-button>            
+        </form>
+        <br>
+        <br>
+        <hr>
+        <br>
+        <table id="tableLogByIp" class="mdl-data-table" width="100%" cellspacing="0"></table>
+    </div>
+
+  </template>
+
+  <script>
+    Polymer({
+        is: 'logs-by-ip',
+
+        properties: {            
+          active: {
+            type: Boolean,
+            value: false,
+            observer: '_activeChanged'
+          }
+        },   
+
+        ready: function() {
+          $(this.$.tableLogByIp).DataTable({
+            columns: [
+                {title: "server id"},
+                {title: "event"},
+                {title: "date"}
+            ]
+          });
+      },
+  
+        _activeChanged: function(active) {
+            if (active) {                
+                
+            }
+        },
+
+        _postFormData: function(event) {              
+          //ee.emit(appConfig.event.tagAdd, event);  
+        }
+    }); 
+  </script>
+</dom-module>

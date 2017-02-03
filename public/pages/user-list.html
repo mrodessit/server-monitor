@@ -1,0 +1,46 @@
+
+<link rel="import" href="../imports/table.html">
+
+<dom-module id="user-list">
+  <template>    
+    
+    <link rel="stylesheet" type="text/css" href="../css/dataTables.custom.css">  
+    <style include="shared-styles"></style>
+        
+    <div class="card">        
+        <table id="tableUserList" class="mdl-data-table" width="100%" cellspacing="0"></table>
+    </div>  
+
+  </template>
+
+  <script>
+    Polymer({
+      is: 'user-list',
+
+      properties: {            
+            active: {
+                type: Boolean,
+                value: false,
+                observer: '_activeChanged'
+            },
+      },
+
+      ready: function() {
+          $(this.$.tableUserList).DataTable({
+            columns: [
+                {title: "id"},
+                {title: "username"},
+                {title: "is Admin"},
+                {title: "action"},
+            ]
+          });
+      },
+
+      _activeChanged: function(active) {
+            if (active) {                
+                ee.emit(appConfig.event.userList, this.$.tableUserList);
+            }
+        },
+    });
+  </script>
+</dom-module>

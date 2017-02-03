@@ -1,0 +1,59 @@
+
+<link rel="import" href="../imports/form.html">
+
+<dom-module id="tag-delete">
+  <template>    
+    <style include="shared-styles">
+    </style>
+
+    <div class="item">
+      <div class="card" id="tagDeleteDiv">                
+        <block-notify id="notifyTagDelete"></block-notify>
+        <h3>Delete Tag?</h3>                
+        <div id="tagDeleteInfo"></div>
+        <br>
+        <a href="/tag-list"><paper-button raised >BACK</paper-button></a>
+        <paper-button raised disabled class="custom red" id="buttonFormTagDelete" on-click="_postTagDeleteData">Delete</paper-button>
+      </div>
+    </div>
+
+  </template>
+
+  <script>
+    Polymer({
+        is: 'tag-delete',
+
+        properties: {            
+              active: {
+                  type: Boolean,
+                  value: false,
+                  observer: '_activeChanged'
+              },
+        },      
+
+        _activeChanged: function(active) {
+            if (active) {                                
+                this.$.notifyTagDelete.notifyHide();
+                this.$.tagDeleteInfo.innerHTML = "";
+                var domData = {
+                  notify: this.$.notifyTagDelete,
+                  infoDiv: this.$.tagDeleteInfo,
+                  buttonDelete: this.$.buttonFormTagDelete
+                };
+
+                ee.emit(appConfig.event.tagPrepareDelete, domData);
+            }
+        },
+
+        _postTagDeleteData: function(event) {
+          var domData = {
+            notify: this.$.notifyTagDelete,
+            submit: this.$.buttonFormTagDelete,            
+          };
+
+          ee.emit(appConfig.event.tagDelete, domData);
+        }
+
+    });
+  </script>
+</dom-module>

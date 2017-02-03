@@ -3,7 +3,7 @@ var bcrypt  = require('../helpers/crypt');
 
 var Tag = class {
 
-    static create(tagData, userId, callback) {        
+    static create(tagData, userId, callback) {             
         db.run("INSERT INTO tags_table (tag, is_system, color) VALUES (?, ?, ?)", [tagData.tag, 0, tagData.color], (err) => {            
             if (err) {
                 callback("Error: while adding new tag!");
@@ -75,6 +75,17 @@ var Tag = class {
 
     static list(callback) {
         db.all("SELECT * FROM tags_table", (err, tags) => {
+            if (err) {
+                callback("Error: while getting tag by name!");
+            }
+            else {
+                callback(null, tags);
+            }
+        });
+    }
+
+    static listEditable(callback) {
+        db.all("SELECT * FROM tags_table WHERE is_system=0", (err, tags) => {
             if (err) {
                 callback("Error: while getting tag by name!");
             }

@@ -1,0 +1,59 @@
+
+<link rel="import" href="../imports/form.html">
+
+<dom-module id="user-delete">
+  <template>    
+    <style include="shared-styles">
+    </style>
+
+    <div class="item">
+      <div class="card" id="userDeleteDiv">                
+        <block-notify id="notifyUserDelete"></block-notify>
+        <h3>Delete User?</h3>                
+        <div id="userDeleteInfo"></div>
+        <br>
+        <a href="/user-list"><paper-button raised >BACK</paper-button></a>
+        <paper-button raised disabled class="custom red" id="buttonFormUserDelete" on-click="_postUserDeleteData">Delete</paper-button>
+      </div>
+    </div>
+
+  </template>
+
+  <script>
+    Polymer({
+        is: 'user-delete',
+
+        properties: {            
+              active: {
+                  type: Boolean,
+                  value: false,
+                  observer: '_activeChanged'
+              },
+        },      
+
+        _activeChanged: function(active) {
+            if (active) {                
+                var domData = {
+                  notify: this.$.notifyUserDelete,
+                  infoDiv: this.$.userDeleteInfo,
+                  buttonDelete: this.$.buttonFormUserDelete
+                };
+
+                ee.emit(appConfig.event.userPrepareDelete, domData);
+                this.$.notifyUserDelete.notifyHide();
+                this.$.userDeleteInfo.innerHTML = "";
+            }
+        },
+
+        _postUserDeleteData: function(event) {
+          var domData = {
+            notify: this.$.notifyUserDelete,
+            buttonDelete: this.$.buttonFormUserDelete
+          };
+
+          ee.emit(appConfig.event.userDelete, domData);
+        }
+
+    });
+  </script>
+</dom-module>

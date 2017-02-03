@@ -1,0 +1,73 @@
+
+<link rel="import" href="../imports/table.html">
+
+<dom-module id="server-delete">
+  <template>    
+    
+    <link rel="stylesheet" type="text/css" href="../css/dataTables.custom.css">  
+    <style include="shared-styles">
+    </style>
+
+    <div class="item">
+      <div class="card" id="serverDeleteDiv">                
+        <block-notify id="notifyServerDelete"></block-notify>
+        <h3>Delete Server(s)?</h3>                        
+        
+        <a href="/server-list"><paper-button raised >BACK</paper-button></a>
+        <paper-button raised disabled class="custom red" id="buttonServerDelete" on-click="_postServerDeleteData">Delete</paper-button>        
+        <br>
+        <hr>
+        <table id="tableServerDelete" class="mdl-data-table" width="100%" cellspacing="0"></table>
+      </div>
+    </div>
+
+  </template>
+
+  <script>
+    Polymer({
+        is: 'server-delete',
+
+        properties: {            
+              active: {
+                  type: Boolean,
+                  value: false,
+                  observer: '_activeChanged'
+              },
+        },
+
+        ready: function() {
+            $(this.$.tableServerDelete).DataTable({                
+                lengthMenu: [ [25, 50, 100, -1], [25, 50, 100, "All"] ],                        
+                columns: [
+                    {title: "id"},
+                    {title: "ip"}
+                ]
+            });
+        },      
+
+        _activeChanged: function(active) {
+            if (active) {                                
+                this.$.notifyServerDelete.notifyHide();  
+
+                var domData = {
+                    notify: this.$.notifyServerDelete,
+                    table: this.$.tableServerDelete,
+                    submit: this.$.buttonServerDelete
+                };
+                              
+                ee.emit(appConfig.event.serverPrepareIdInfo, domData);                                
+            }
+        },
+
+        _postServerDeleteData: function(event) {
+            var domData = {
+                notify: this.$.notifyServerDelete,
+                submit: this.$.buttonServerDelete
+            };
+
+            ee.emit(appConfig.event.serverDelete, domData);
+        }
+
+    });
+  </script>
+</dom-module>

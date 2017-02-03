@@ -74,7 +74,7 @@ var Server = class {
             }            
         }
 
-        var query = `BEGIN;\n${transaction}\nCOMMIT;`;        
+        var query = `BEGIN;\n${transaction}\nCOMMIT;`;                        
 
         db.exec(query, (err) => {
             if (err) {                         
@@ -134,7 +134,7 @@ var Server = class {
             if (err) {                
                 callback("Error: while getting servers info by id.");
             }
-            else {
+            else {                
                 callback(null, servers);
             }
         });

@@ -1,0 +1,54 @@
+
+<link rel="import" href="../imports/table.html">
+
+<dom-module id="logs-by-id">
+  <template>    
+    <link rel="stylesheet" type="text/css" href="../css/dataTables.custom.css">
+    <style include="shared-styles">      
+    </style>
+
+    <div class="card" id="divLogsById">        
+        <block-notify id="notifyFormLogById"></block-notify>        
+        <br>
+        <table id="tableLogById" class="mdl-data-table" width="100%" cellspacing="0"></table>
+    </div>
+
+  </template>
+
+  <script>
+    Polymer({
+        is: 'logs-by-id',
+
+        properties: {            
+          active: {
+            type: Boolean,
+            value: false,
+            observer: '_activeChanged'
+          }
+        },   
+
+        ready: function() {
+          $(this.$.tableLogById).DataTable({
+            columns: [
+                {title: "server id"},
+                {title: "server ip"},
+                {title: "event"},
+                {title: "date"}
+            ]
+          });
+        },
+  
+        _activeChanged: function(active) {
+            if (active) { 
+                this.$.notifyFormLogById.notifyHide();                                       
+
+                var domData = {
+                  notify: this.$.notifyFormLogById,
+                  table: this.$.tableLogById
+                };                
+                ee.emit(appConfig.event.logsById, domData);
+            }
+        },
+    }); 
+  </script>
+</dom-module>

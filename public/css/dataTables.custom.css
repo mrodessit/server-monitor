@@ -1,0 +1,26 @@
+@import "dataTables.material.min.css";
+@import "material.min.css";
+
+#tableServerList {
+    table-layout: fixed;
+    white-space: normal;
+}
+
+#tableServerList > thead > tr > th[class*="sort"]::before{display: none}
+#tableServerList > thead > tr > th[class*="sort"]::after{display: none}           
+
+#tableServerList thead tr th {
+    padding: 0px 10px 0px 5px;
+    height: 30px;
+    text-align: center;
+}
+
+#tableServerList tbody tr td {
+    padding: 0px 10px 0px 5px;
+    height: auto;
+    text-align: center;
+}
+
+.sorting-disabled {
+    background-image:none !important;
+}

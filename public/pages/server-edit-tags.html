@@ -1,0 +1,127 @@
+
+<link rel="import" href="../imports/table.html">
+<link rel="import" href="../imports/form.html">
+
+<dom-module id="server-edit-tags">
+  <template>    
+    
+    <link rel="stylesheet" type="text/css" href="../css/dataTables.custom.css">  
+    <style include="shared-styles">
+        .tag-list-header {            
+            padding: 30px 10px 0px 20px;
+        }
+
+        #tableSimpleTagList tbody tr td span{
+            cursor: pointer;
+        }
+    </style>
+
+    <div class="card" id="serverEditTagsDiv">                
+        <div class="item-row">
+            <block-notify id="notifyServerEditTags"></block-notify>
+            <paper-input name="tagname" id="inputEditTagName" label="Tag name(s)"></paper-input>
+            <paper-radio-group id="radioServerTags" selected="insert" aria-labelledby="label2">
+                <paper-radio-button name="insert" value="insert">insert tags</paper-radio-button>
+                <br>
+                <paper-radio-button name="delete" value="delete">delete tags</paper-radio-button>        
+            </paper-radio-group>
+            <hr>        
+            <a href="/server-list"><paper-button raised >BACK</paper-button></a>
+            <paper-button raised disabled class="custom green" id="buttonServerTagsSubmit" on-click="_postServerEditTags">Submit</paper-button>        
+            <br>
+            <br>
+            <hr>
+            <table id="tableServerEditTags" class="mdl-data-table" width="100%" cellspacing="0"></table>
+        </div>
+        <div class="item-row">
+            <span class="tag-list-header">Tag List (click to copy)</span>
+            <table id="tableSimpleTagList" class="mdl-data-table" widht="100%" cellspacing="0"></table>
+        </div>
+    </div>
+
+  </template>
+
+  <script>
+    Polymer({
+        is: 'server-edit-tags',
+
+        properties: {            
+              active: {
+                  type: Boolean,
+                  value: false,
+                  observer: '_activeChanged'
+              },
+        },
+
+        ready: function() {
+            $(this.$.tableServerEditTags).DataTable({                
+                lengthMenu: [ [25, 50, 100, -1], [25, 50, 100, "All"] ],                        
+                columns: [
+                    {title: "id"},
+                    {title: "ip"}
+                ]
+            });
+            $(this.$.tableSimpleTagList).DataTable({         
+                searchable: false,
+                filter: false,
+                info: false,
+                lengthChange: false,
+                paginate: false,       
+                order: false,
+                lengthMenu: [ [25, 50, 100, -1], [25, 50, 100, "All"] ],                        
+                columns: [
+                    {title: "column"},
+                    {title: "column"},
+                    {title: "column"},
+                    {title: "column"}
+                ]
+            });
+        },      
+
+        _activeChanged: function(active) {
+            if (active) {                
+                var domData = {
+                    notify: this.$.notifyServerEditTags,
+                    table: this.$.tableServerEditTags,
+                    submit: this.$.buttonServerTagsSubmit
+                };
+
+                this.$.notifyServerEditTags.notifyHide(); 
+                this.$.inputEditTagName.value = '';          
+                ee.emit(appConfig.event.serverPrepareIdInfo, domData);
+                ee.emit(appConfig.event.tagListSelectable, this.$.tableSimpleTagList);                                
+            }
+        },
+
+        _postServerEditTags: function(event) {
+            var domData = {
+                action: this.$.radioServerTags.selected,
+                tags: this.$.inputEditTagName.value,
+                notify: this.$.notifyServerEditTags
+            };
+
+            ee.emit(appConfig.event.serverEditTags, domData);
+        }
+
+    });
+
+    function _selectTag(event, tagName) {
+        var element = Polymer.dom(event).localTarget;
+        var input = $(element).parents('#serverEditTagsDiv').find('#inputEditTagName');
+
+        var tagInputArray = input.val().split(' ');
+
+        if (tagInputArray.includes(tagName)) {
+            var tagIndex = tagInputArray.indexOf(tagName);
+
+            if (tagIndex)
+                tagInputArray.splice(tagIndex, 1);
+        }
+        else {
+            tagInputArray.push(tagName)
+        }
+
+        input.val(tagInputArray.join(' '));
+    }
+  </script>
+</dom-module>

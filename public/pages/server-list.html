@@ -1,0 +1,159 @@
+
+<link rel="import" href="../imports/table.html">
+
+<dom-module id="server-list">
+  <template>    
+    
+    <link rel="stylesheet" type="text/css" href="../css/dataTables.custom.css">  
+    <style include="shared-styles">       
+    </style>
+        
+    <div class="card" id="serverListDiv">   
+        <paper-button raised onClick="_copyChecked(event)">Copy</paper-button>
+        <paper-button raised onClick="_tagEditChecked(event)">Tags</paper-button>
+        <paper-button raised onClick="_togglePauseRunChecked(event)">Pause/Run</paper-button>     
+        <paper-button raised onClick="_deleteChecked(event)">Delete</paper-button>
+        <table id="tableServerList" class="mdl-data-table" width="100%" cellspacing="0">
+            <thead>
+                <tr>
+                    <th><input type="checkbox" name="select_all" value="1" class="sorting-disabled" id="example-select-all"></th>
+                    <th>id</th>
+                    <th>ip</th>
+                    <th>paused</th>
+                    <th>state</th>
+                    <th>created</th>
+                    <th>updated</th>
+                    <th>tags</th>
+                    <th>actions</th>
+                </tr>
+            </thead>
+        </table>
+        <paper-button raised onClick="_copyChecked(event)">Copy</paper-button>
+        <paper-button raised onClick="_tagEditChecked(event)">Tags</paper-button>
+        <paper-button raised onClick="_togglePauseRunChecked(event)">Pause/Run</paper-button>     
+        <paper-button raised onClick="_deleteChecked(event)">Delete</paper-button>
+    </div>  
+
+  </template>
+
+  <script>
+    Polymer({
+      is: 'server-list',
+
+      properties: {            
+            active: {
+                type: Boolean,
+                value: false,
+                observer: '_activeChanged'
+            },
+      },
+
+      ready: function() {
+          $(this.$.tableServerList).DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: appConfig.ajax.getServerList,
+            lengthMenu: [ [25, 50, 100, -1], [25, 50, 100, "All"] ],
+            paging: true,
+            autoWidth: true,
+            order: [[ 1, "asc" ]],
+            columns: [
+                {data: "checkbox", sortable: false, orderable: false, searchable: false},
+                {data: "id"},
+                {data: "ip"},
+                {data: "is_paused"},
+                {data: "server_state"},
+                {data: "date_create"},
+                {data: "date_update"},                
+                {data: "tags"},
+                {data: "buttons", sortable: false}
+            ]
+          });
+
+          // header checkbox toggle all event on click          
+          $(this.$.tableServerList).find("th input:checkbox").click(function() {
+            var checkedStatus = this.checked;
+            var checkbox = $(this).parents('#tableServerList').find('tr td:first-child input:checkbox');		
+            checkbox.each(function() {
+                this.checked = checkedStatus;
+                if (checkedStatus == this.checked) {
+                    $(this).closest('.checker > span').removeClass('checked');
+                }
+                if (this.checked) {
+                    $(this).closest('.checker > span').addClass('checked');
+                }
+            });
+          });	
+      },
+
+        _activeChanged: function(active) {
+            if (active) {                    
+                if ( $.fn.DataTable.isDataTable(this.$.tableServerList) ) {
+                    $(this.$.tableServerList).DataTable().ajax.reload(null, false);
+                }
+            }
+        },
+    });    
+
+    function _togglePauseRunChecked(event) {
+        var idArray = getCheckedBoxes(event);
+        _serverPauseRun(event, idArray);
+    }
+
+    function _copyChecked(event) {
+        var button = Polymer.dom(event).localTarget;
+        var ipArray = [];
+        var idArray = getCheckedBoxes(event);
+
+        for(var i=0; i<idArray.length; i++) {
+            var element = '#'+idArray[i]+'-ip';
+            ipArray.push($(button).parent().find(element).html());
+        }
+
+        copyToClipboard(ipArray.join(','));
+    }
+
+    function _deleteChecked(event) {
+        var idArray = getCheckedBoxes(event);
+
+        if (idArray.length) {
+            window.location = "/server-delete?id=" + idArray.join(',');
+        }
+    }
+
+    function _tagEditChecked(event) {
+        var idArray = getCheckedBoxes(event);
+
+        if (idArray.length) {
+            window.location = "/server-edit-tags?id=" + idArray.join(',');
+        }
+    }
+
+    function _serverCopyIp(event) {
+        var element = Polymer.dom(event).localTarget;
+        var ipElement = $(element).parents('tr').find('.mdl-row-ip');
+        
+        copyToClipboard(ipElement.text());
+    }
+
+    function _serverPauseRun(event, id) {
+        var element = Polymer.dom(event).localTarget;
+        var dataTable = $(element).parents('#serverListDiv').find('table');
+
+        var domData = {
+            id: id,
+            table: dataTable
+        };
+
+        ee.emit(appConfig.event.serverPauseRun, domData);
+    }  
+
+    function getCheckedBoxes(event) {
+        var button = Polymer.dom(event).localTarget;
+
+        return idArray = $(button).parent().find("input[name='serverCheckBox[]']:checkbox:checked").map(function() {
+            return this.value;
+        }).get();
+    }
+  </script>
+</dom-module>

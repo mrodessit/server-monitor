@@ -1,0 +1,75 @@
+
+<link rel="import" href="../imports/form.html">
+
+<dom-module id="tag-add">
+  <template>    
+    <style include="shared-styles">      
+    </style>
+
+    <div class="item">
+      <div class="card">        
+        <form is="iron-form" id="formAddTag">
+            <block-notify id="notifyFormAddTag"></block-notify>
+            <paper-input name="tagname" id="formAddTagName" label="Tag name" required auto-validate></paper-input>
+            Tag Color: <paper-swatch-picker id="formAddTagColor" color="{{selectedColor}}" required auto-validate></paper-swatch-picker>
+            <br>
+            <br>            
+            <paper-button raised on-click="_resetForm" id="formAddTagResetButton">Reset</paper-button>  
+            <paper-button raised on-click="_postFormData" id="formAddTagSubmitButton" disabled>Submit</paper-button>                                              
+        </form>
+      </div>
+    </div>
+
+  </template>
+
+  <script>
+    Polymer({
+        is: 'tag-add',
+
+        properties: {            
+          active: {
+            type: Boolean,
+            value: false,
+            observer: '_activeChanged'
+          },
+          selectedColor: {
+              type: String
+          }
+        },   
+
+        listeners: {
+          'change' : '_formValidate'
+        },   
+
+        _formValidate: function(e) {
+          this.$.formAddTagSubmitButton.disabled = !this.$.formAddTag.validate();
+        },
+
+        _activeChanged: function(active) {
+            if (active) {                
+                this._resetForm();
+            }
+        },
+
+        _resetForm: function() {                   
+          this.$.formAddTag.reset();
+          this.$.formAddTagSubmitButton.disabled = true;
+          this.$.notifyFormAddTag.notifyHide();
+        },
+
+        _postFormData: function(event) {  
+          var domData = {
+            newTagData: {
+              tag: this.$.formAddTagName.value,
+              color: this.$.formAddTagColor.color.replace('#','')
+            },
+            notify: this.$.notifyFormAddTag,
+            submit: this.$.formAddTagSubmitButton,
+            form: this.$.formAddTag
+          };
+
+          ee.emit(appConfig.event.tagAdd, domData);  
+        }
+    }); 
+  </script>
+</dom-module>

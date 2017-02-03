@@ -1,0 +1,89 @@
+
+<link rel="import" href="../imports/form.html">
+
+<dom-module id="user-edit">
+  <template>    
+    <style include="shared-styles">
+      paper-input {            
+            --paper-input-prefix: {
+                color: black;                
+            };
+        }    
+    </style>
+
+    <div class="item">
+      <div class="card">        
+        <form is="iron-form" id="formEditUser">
+            <block-notify id="notifyFormEditUser"></block-notify>
+            <paper-input id="formUserEditId" required disabled auto-validate>
+              <div prefix>User id:&nbsp;&nbsp;</div>
+            </paper-input>
+            <paper-input id="formUserEditUsername" required disabled auto-validate>
+              <div prefix>Username:&nbsp;&nbsp;</div>
+            </paper-input>
+            <paper-input id="formUserEditOldPassword" label="Old password" type="password" required auto-validate></paper-input>
+            <paper-input id="formUserEditNewPassword1" label="New password" type="password" required auto-validate></paper-input>
+            <paper-input id="formUserEditNewPassword2" label="New password again" type="password" required auto-validate></paper-input>            
+            <br>
+            <br>            
+            <a href="/user-list"><paper-button raised >BACK</paper-button></a> 
+            <paper-button raised on-click="_postFormData" id="formEditUserSubmitButton" disabled>Submit</paper-button>                                              
+        </form>
+      </div>
+    </div>
+
+  </template>
+
+  <script>
+    Polymer({
+        is: 'user-edit',
+
+        properties: {            
+          active: {
+            type: Boolean,
+            value: false,
+            observer: '_activeChanged'
+          },
+        },   
+
+        listeners: {
+          'change' : '_formValidate'
+        },   
+
+        _formValidate: function(e) {
+          this.$.formEditUserSubmitButton.disabled = !this.$.formEditUser.validate();
+        },
+
+        _activeChanged: function(active) {
+            if (active) {       
+                this.$.formEditUser.reset();
+                this.$.formUserEditId.value = null;
+                this.$.formUserEditUsername.value = null; 
+
+                var domData = {
+                  notify: this.$.notifyFormEditUser,
+                  inputId: this.$.formUserEditId,
+                  inputUsername: this.$.formUserEditUsername
+                };
+
+                ee.emit(appConfig.event.userPrepareEdit, domData);
+            }
+        },
+
+        _postFormData: function() {              
+          var domData = {
+            editUserData: {
+              id: this.$.formUserEditId.value,
+              oldPassword: this.$.formUserEditOldPassword.value,
+              newPassword1: this.$.formUserEditNewPassword1.value,
+              newPassword2: this.$.formUserEditNewPassword2.value
+            },
+            notify: this.$.notifyFormEditUser,
+            submit: this.$.formEditUserSubmitButton
+          }
+
+          ee.emit(appConfig.event.userEdit, domData);  
+        }
+    }); 
+  </script>
+</dom-module>

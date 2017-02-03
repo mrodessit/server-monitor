@@ -1,0 +1,99 @@
+
+<link rel="import" href="../imports/form.html">
+
+<dom-module id="tag-edit">
+  <template>    
+    <style include="shared-styles">
+        paper-input {            
+            --paper-input-prefix: {
+                color: black;                
+            };
+            --paper-input-suffix: {
+                color: sandybrown;                
+            };
+            --paper-input-container-disabled: {
+                font-weight: 700;
+                color: black;
+            };
+        }    
+    </style>
+
+    <div class="item">
+      <div class="card">        
+        <form is="iron-form" id="formEditTag">
+            <block-notify id="notifyFormEditTag"></block-notify>
+            <paper-input id="formTagEditId" required disabled auto-validate>
+                <div prefix>Current tag id:&nbsp;&nbsp;</div>
+            </paper-input>
+            <paper-input id="formTagEditOldName" required disabled auto-validate>
+                <div prefix>Current tag name:&nbsp;&nbsp;</div>    
+            </paper-input>            
+            <paper-input id="formTagEditNewName" label="New Tag Name" auto-validate>
+                <div suffix>*optional field</div>   
+            </paper-input>            
+            Tag Color: <paper-swatch-picker id="formTagEditColor" color="{{selectedColor}}" ></paper-swatch-picker>
+            <br>
+            <br>            
+            <a href="/tag-list"><paper-button raised >BACK</paper-button></a> 
+            <paper-button raised on-click="_postFormData" id="formEditTagSubmitButton" disabled>Submit</paper-button>                                              
+        </form>
+      </div>
+    </div>
+
+  </template>
+
+  <script>
+    Polymer({
+        is: 'tag-edit',
+
+        properties: {            
+          active: {
+            type: Boolean,
+            value: false,
+            observer: '_activeChanged'
+          },
+        },   
+
+        listeners: {
+          'change' : '_formValidate'
+        },   
+
+        _formValidate: function(e) {
+          this.$.formEditTagSubmitButton.disabled = !this.$.formEditTag.validate();
+        },
+
+        _activeChanged: function(active) {
+            if (active) {                       
+                this.$.formEditTag.reset();
+                this.$.notifyFormEditTag.notifyHide();
+                this.$.formTagEditId.value = null; 
+                this.$.formTagEditOldName.value = null;
+
+                var domData = {
+                    inputId: this.$.formTagEditId,
+                    inputOldName: this.$.formTagEditOldName,
+                    inputColor: this.$.formTagEditColor,
+                    notify: this.$.notifyFormEditTag,
+                    submit: this.$.formEditTagSubmitButton
+                }   
+
+                ee.emit(appConfig.event.tagPrepareEdit, domData);
+            }
+        },
+
+        _postFormData: function() {            
+            var domData = {
+                editTagData: {
+                    id: this.$.formTagEditId.value,
+                    tag: this.$.formTagEditNewName.value || this.$.formTagEditOldName.value,
+                    color: this.$.formTagEditColor.color.replace('#','') 
+                },
+                notify: this.$.notifyFormEditTag,
+                submit: this.$.formEditTagSubmitButton
+            };
+
+            ee.emit(appConfig.event.tagEdit, domData);  
+        }
+    }); 
+  </script>
+</dom-module>

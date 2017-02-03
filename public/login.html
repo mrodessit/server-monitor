@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+    <title>Server Monitor</title>
+    <meta name="description" content="server monitor">
+
+    <link rel="icon" href="/images/favicon.ico">
+
+    <link rel="manifest" href="/manifest.json">
+
+    <!-- See https://goo.gl/qRE0vM -->
+    <meta name="theme-color" content="#3f51b5">
+
+    <!-- Add to homescreen for Chrome on Android. Fallback for manifest.json -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="server monitor">
+
+    <script>
+
+      window.Polymer = {
+        dom: 'shadow',
+        lazyRegister: true,
+      };
+      
+      (function() {
+        'use strict';
+
+        var onload = function() {
+
+          if (!window.HTMLImports) {
+            document.dispatchEvent(
+              new CustomEvent('WebComponentsReady', {bubbles: true})
+            );
+          }
+        };
+
+        var webComponentsSupported = (
+          'registerElement' in document
+          && 'import' in document.createElement('link')
+          && 'content' in document.createElement('template')
+        );
+
+        if (!webComponentsSupported) {
+          var script = document.createElement('script');
+          script.async = true;
+          script.src = '/bower_components/webcomponentsjs/webcomponents-lite.min.js';
+          script.onload = onload;
+          document.head.appendChild(script);
+        } else {
+          onload();
+        }
+      })();
+      
+    </script>    
+
+    <style>
+        body {
+            background-color: #919191;
+        }
+
+        .card {
+            width: 400px;
+            height: auto;
+            margin: 100px auto;
+            padding: 10px;
+            color: #757575;
+            border-radius: 5px;
+            background-color: #fff;
+            box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+
+    <link rel="import" href="../imports/form.html">
+    
+  </head>
+  <body unresolved fullbleed>
+    <div class="card">      
+        <form is="iron-form" id="formLogin" method="post" action="/login">        
+            <paper-input name="username" id="formLoginUsername" label="Username" required auto-validate></paper-input>
+            <paper-input name="password" id="formLoginPassword" label="Password" type="password" required auto-validate></paper-input>        
+            <br>          
+            <div align="right">  
+                <paper-button raised onClick="resetForm()" id="formLoginResetButton">Reset</paper-button>  
+                <paper-button raised onClick="postFormData()" id="formLoginSubmitButton">Submit</paper-button>                                              
+            </div>
+        </form>
+    </div>
+    <script>
+        function resetForm() {            
+            document.getElementById('formLogin').reset();
+        }
+
+        function postFormData() {
+            document.getElementById('formLogin').submit();
+        }        
+
+        document.getElementById('formLogin').addEventListener('iron-form-response', function(data) {
+            window.location = "/";
+        });
+
+        document.getElementById('formLogin').addEventListener('iron-form-error', function(data) {
+            
+        });
+    </script>
+  </body>
+</html>

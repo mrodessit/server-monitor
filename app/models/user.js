@@ -20,7 +20,7 @@ var User = class {
     }    
 
     static validateNewUserObject(user, callback) {
-        if ("username" in user && "password" in user && "isadmin" in user) {
+        if ("username" in user && "password" in user && "isadmin" in user) {                        
             if (user.username.length > 4 && user.password.length > 6 && (user.isadmin == 1 || user.isadmin == 0)) {
                 callback(null, user);
             }

@@ -91,4 +91,15 @@ router.get('/tag/get/list', (req, res) => {
     });
 });
 
+router.get('/tag/get/editable', (req, res) => {
+    tag.listEditable((err, data) => {
+        if (err) {
+            res.json(jsonResponse.Error(err));            
+        }
+        else {
+            res.json(jsonResponse.Data(data));
+        }
+    });
+});
+
 module.exports = router;
