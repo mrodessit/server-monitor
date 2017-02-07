@@ -4,15 +4,6 @@ var dbTools  = require('./db');
 var watcherConfig = require('../app/config/db-settings');
 
 var watcher = class {
-
-    static init() {        
-        require('events').EventEmitter.defaultMaxListeners = Infinity;
-
-        setTimeout(() => {
-            this.start();
-        }, watcherConfig.get().watcherStartDelay * 1000);   
-    }
-
     static start() {
         async.waterfall([
             async.apply(dbTools.selectRandomServers, watcherConfig.get().scanServerLimit),
@@ -108,4 +99,13 @@ var watcher = class {
     }
 }
 
-module.exports = watcher;
+module.exports = { 
+
+    init: function() {        
+        require('events').EventEmitter.defaultMaxListeners = Infinity;
+
+        setTimeout(() => {
+            watcher.start();
+        }, watcherConfig.get().watcherStartDelay * 1000);   
+    }
+}
