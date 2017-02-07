@@ -1,4 +1,5 @@
 .DS_*
 .vscode
 node_modules
-app/database/*
+app/database/main-data.db
+app/database/sessions.db
