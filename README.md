@@ -9,3 +9,11 @@ Build using Polymer with help of native polymer webcomponents. Shadow DOM suppor
 ### Server check state tool
 Module that checks server state and update information about it at DB. 
 
+## Structure
+/app - backend 
+/public - polymer frontend
+/setup - setup database files
+/test - testing backend with MOCHA & CHAI. 
+/watcher - server state check tool
+
+Entrypoint: app.js
