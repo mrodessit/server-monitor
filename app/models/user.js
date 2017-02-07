@@ -76,7 +76,7 @@ var User = class {
             async.apply(this.compareNewAndUserPassword, updateData),
             this.hashUserPassword,
             this.saveUser
-        ], function(err, id) {
+        ], (err, id) => {
             if (err) {
                 callback(err);
             }

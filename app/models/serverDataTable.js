@@ -193,12 +193,22 @@ var ServerDataTable = class {
         return result.join(' ');
     }    
 
+    generateShortDateTimeString(timestamp) {
+        var date = new Date(timestamp);
+        var dateOptions = { year: '2-digit', month: '2-digit', day: '2-digit'};
+        var timeOptions = { hour12: false, hour: '2-digit', minute: '2-digit'};
+
+        return date.toLocaleDateString([], dateOptions)+', '+date.toLocaleTimeString([], timeOptions);
+    }
+
     updateList(callback) {
         var servers = this.servers;                        
 
         for(var i=0; i<servers.length; i++) {            
             servers[i].ip = `<span class="mdl-row-ip" id="${servers[i].id}-ip">${servers[i].ip}</span>`;
             servers[i].is_paused = servers[i].is_paused ? true : false;
+            servers[i].date_create = this.generateShortDateTimeString(servers[i].date_create);
+            servers[i].date_update = this.generateShortDateTimeString(servers[i].date_update);
             servers[i].tags = this.generateTagString(servers[i].tags);
             servers[i].checkbox = `<input type="checkbox" name="serverCheckBox[]" value="${servers[i].id}">`;                        
             servers[i].buttons = `
